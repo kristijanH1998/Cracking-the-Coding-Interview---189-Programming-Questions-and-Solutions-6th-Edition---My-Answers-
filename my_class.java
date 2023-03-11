@@ -1,3 +1,5 @@
+// Chapter 1: Arrays and Strings
+
 import java.util.HashMap;
 public class my_class {
 
