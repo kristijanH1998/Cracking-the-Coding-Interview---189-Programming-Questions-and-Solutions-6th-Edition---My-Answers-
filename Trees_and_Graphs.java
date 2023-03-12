@@ -1,6 +1,7 @@
 package trees_and_Graphs;
 
 import java.util.NoSuchElementException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 
@@ -77,12 +78,14 @@ class treeNode{
 	public treeNode[] children = {null, null};
 	public treeNode next;
 	
-	public void addChild(treeNode x) {
-		if (this.leftChild == null) {
-			this.leftChild = x;
-		} else {
-			this.rightChild = x;
-		}
+	public void addLeftChild(treeNode x) {
+		this.leftChild = x;
+		this.children[this.numOfChildren] = x;
+		this.numOfChildren++;
+	}
+	
+	public void addRightChild(treeNode x) {
+		this.rightChild = x;
 		this.children[this.numOfChildren] = x;
 		this.numOfChildren++;
 	}
@@ -312,6 +315,65 @@ public class Trees_and_Graphs {
 		return temp;
 	}
 	
+	public static boolean validateBST(treeNode root) {
+		if (root.leftChild == null && root.rightChild == null) return true;
+		boolean bst;
+		
+		if(root.leftChild == null) {
+			bst = root.value < minNode(root.rightChild);
+			return bst && validateBST(root.rightChild);
+
+		} else if (root.rightChild == null) {
+			bst = root.value >= maxNode(root.leftChild);
+			return bst && validateBST(root.leftChild);
+		} else {
+			bst = root.value >= maxNode(root.leftChild) && (root.value < minNode(root.rightChild));
+			return bst && (validateBST(root.leftChild) && validateBST(root.rightChild));
+		} 	
+	}
+	
+	public static int maxNode (treeNode root) {
+		if(root.leftChild == null && root.rightChild == null) {
+			return root.value;
+		}
+		int max_value = root.value;
+		int temp = 0;
+		
+		root.visited = true;
+		for (treeNode n: root.children) {
+			if(n != null && n.visited == false){
+				temp = maxNode(n);
+				if(root.value < temp && max_value < temp) {
+					max_value = temp;
+				} 
+			}
+		}
+		
+		root.visited = false;
+		return max_value;
+	}
+	
+	public static int minNode (treeNode root) {
+		if(root.leftChild == null && root.rightChild == null) {
+			return root.value;
+		}
+		int min_value = root.value;
+		int temp = 0;
+		
+		root.visited = true;
+		for (treeNode n: root.children) {
+			if(n != null && n.visited == false){
+				temp = minNode(n);
+				if(root.value >= temp && min_value >= temp) {
+					min_value = temp;
+				} 
+			}
+		}
+		
+		root.visited = false;
+		return min_value;
+	}
+	
 	public static void main(String[] args) {
 
 //		Graph g = new Graph();
@@ -372,38 +434,35 @@ public class Trees_and_Graphs {
 //		System.out.println(root.children[1].value);
 //		listOfDepths(root, 1);
 		
-		treeNode root = new treeNode(1);
-		treeNode n1 = new treeNode(2);
-		treeNode n2 = new treeNode(3);
-		treeNode n3 = new treeNode(4);
-		treeNode n4 = new treeNode(5);
-		treeNode n5 = new treeNode(6);
-		treeNode n6 = new treeNode(7);
-		treeNode n7 = new treeNode(8);
-		treeNode n8 = new treeNode(9);
-		treeNode n9 = new treeNode(10);
-		treeNode n10 = new treeNode(11);
-		treeNode n11 = new treeNode(12);
-
+		treeNode root = new treeNode(8);
+		treeNode n1 = new treeNode(4);
+		treeNode n2 = new treeNode(10);
+		treeNode n3 = new treeNode(2);
+		treeNode n4 = new treeNode(6);
+		treeNode n6 = new treeNode(20);
 		
-		root.addChild(n1);
-		root.addChild(n2);
-		n1.addChild(n3);
-		n1.addChild(n4);
-		n2.addChild(n5);
-		n2.addChild(n6);
-		n3.addChild(n7);
-		n7.addChild(n8);
-		n8.addChild(n9);
-		n8.addChild(n10);
-		n5.addChild(n11);
+		treeNode n5 = new treeNode(11);
+		
+		
+		root.addLeftChild(n1);
+		root.addRightChild(n2);
+		n1.addLeftChild(n3);
+		n1.addRightChild(n4);
+		n2.addRightChild(n6);
+		
+		n4.addRightChild(n5);
 
 //		for(treeNode n: n2.children) {
 //			System.out.println(n.value);
 //		}
 		
-		System.out.println(checkDepth(root, 0, 0));
-		System.out.println(checkDepth(root.rightChild, 0, 0));
-		System.out.println(checkBalanced(n1));
+//		System.out.println(checkDepth(root, 0, 0));
+//		System.out.println(checkDepth(root.rightChild, 0, 0));
+//		System.out.println(checkBalanced(n1));
+				
+//		validateBST(root);
+		System.out.println(maxNode(root));
+		System.out.println(minNode(root));
+		System.out.println(validateBST(root));
 	}
 }
