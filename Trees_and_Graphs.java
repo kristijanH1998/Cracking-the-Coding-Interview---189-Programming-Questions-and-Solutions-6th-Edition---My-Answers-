@@ -1,9 +1,8 @@
-//Chapter 4: Trees and Graphs
-
 package trees_and_Graphs;
 
 import java.util.NoSuchElementException;
 import java.util.Arrays;
+
 
 class LinkedListNode {
 	public LinkedListNode next;
@@ -69,11 +68,14 @@ class LinkedListNode {
 
 class treeNode{
 	public String name;
+	public boolean visited;
+	public boolean marked;
 	public int value;
 	public int numOfChildren = 0;
 	public treeNode leftChild;
 	public treeNode rightChild;
 	public treeNode[] children = {null, null};
+	public treeNode next;
 	
 	public void addChild(treeNode x) {
 		if (this.leftChild == null) {
@@ -123,10 +125,10 @@ class Node {
 }
 
 class Queue {
-	private Node first;
-	private Node last;
+	private treeNode first;
+	private treeNode last;
 
-	public void add(Node item) {
+	public void add(treeNode item) {
 		if (last != null) {
 			last.next = item;
 		}
@@ -136,9 +138,9 @@ class Queue {
 		}
 	} 
 
-	public Node remove() {
+	public treeNode remove() {
 		if (first == null) throw new NoSuchElementException();
-		Node n = first;
+		treeNode n = first;
 		first = first.next;
 		if (first == null) {
 			last = null;
@@ -146,7 +148,7 @@ class Queue {
 		return n;
 	}
 	
-	public Node peek() {
+	public treeNode peek() {
 		if (first == null) throw new NoSuchElementException();
 		return first;
 	}
@@ -180,26 +182,26 @@ class Graph {
 
 public class Trees_and_Graphs {
 	
-	public static boolean route_between_nodes(Node root, Node dest) {
-		Queue queue = new Queue();
-		root.marked = true;
-		queue.add(root);
-		
-		while(!queue.isEmpty()) {
-			Node r = queue.remove();
-			if(r == dest) {
-				System.out.println("There is a path between " + root.getVertex() + " and " + dest.getVertex());
-				return true;
-			}
-			for(int i = 0; i < r.adjacentCount; i++){
-				if(r.getAdjacent()[i].marked == false);
-					r.getAdjacent()[i].marked = true;
-					queue.add(r.getAdjacent()[i]);
-			}
-		}
-		System.out.println("There is no path between the two nodes " + root.getVertex() + " and " + dest.getVertex());
-		return false;
-	}
+//	public static boolean route_between_nodes(Node root, Node dest) {
+//		Queue queue = new Queue();
+//		root.marked = true;
+//		queue.add(root);
+//		
+//		while(!queue.isEmpty()) {
+//			Node r = queue.remove();
+//			if(r == dest) {
+//				System.out.println("There is a path between " + root.getVertex() + " and " + dest.getVertex());
+//				return true;
+//			}
+//			for(int i = 0; i < r.adjacentCount; i++){
+//				if(r.getAdjacent()[i].marked == false);
+//					r.getAdjacent()[i].marked = true;
+//					queue.add(r.getAdjacent()[i]);
+//			}
+//		}
+//		System.out.println("There is no path between the two nodes " + root.getVertex() + " and " + dest.getVertex());
+//		return false;
+//	}
 	
 	//my solution:
 	public static treeNode MinimalTree(int[] ar, int start, int end) {
@@ -272,6 +274,44 @@ public class Trees_and_Graphs {
 		return root;
 	}
 	
+	public static boolean checkBalanced(treeNode root) {
+		
+		Queue queue = new Queue();
+		root.marked = true;
+		queue.add(root);
+		
+		while(!queue.isEmpty()) {
+			root = queue.remove();
+			if (Math.abs(checkDepth(root.leftChild, 0, 0) - checkDepth(root.rightChild, 0, 0)) > 1) {
+				return false;
+			}
+			for(treeNode n: root.children) {
+				if(n!= null && n.marked == false) {
+					n.marked = true;
+					queue.add(n);
+				}
+			}
+		}
+		return true;
+	}
+	
+	public static int checkDepth(treeNode root, int depth, int temp) {
+		if(root == null) return depth;
+		
+		root.visited = true;
+		
+		for (treeNode n: root.children) {
+			if(n != null && n.visited == false) {
+				temp = checkDepth(n, depth + 1, temp);
+			}
+		}
+		if (depth > temp) {
+			temp = depth;
+		}
+		root.visited = false;
+		return temp;
+	}
+	
 	public static void main(String[] args) {
 
 //		Graph g = new Graph();
@@ -312,25 +352,58 @@ public class Trees_and_Graphs {
 //      }
 //		treeNode root = MinimalTree(ar, 0, ar.length - 1);
 //		treeNode root2 = createMinimalBST(ar);
-		treeNode root = new treeNode(3);
-		treeNode ch1 = new treeNode(2);
-		treeNode ch2 = new treeNode(1);
-		treeNode ch3 = new treeNode(4);
-		treeNode ch4 = new treeNode(5);
-		treeNode ch5 = new treeNode(6);
-		treeNode ch6 = new treeNode(7);
+//		treeNode root = new treeNode(3);
+//		treeNode ch1 = new treeNode(2);
+//		treeNode ch2 = new treeNode(1);
+//		treeNode ch3 = new treeNode(4);
+//		treeNode ch4 = new treeNode(5);
+//		treeNode ch5 = new treeNode(6);
+//		treeNode ch6 = new treeNode(7);
+//
+//		root.addChild(ch1);
+//		root.addChild(ch2);
+//		ch1.addChild(ch3);
+//		ch1.addChild(ch4);
+//		ch2.addChild(ch5);
+//		ch5.addChild(ch6);
+//		System.out.println(root.leftChild.value);
+//		System.out.println(root.rightChild.value);
+//		System.out.println(root.children[0].value);
+//		System.out.println(root.children[1].value);
+//		listOfDepths(root, 1);
+		
+		treeNode root = new treeNode(1);
+		treeNode n1 = new treeNode(2);
+		treeNode n2 = new treeNode(3);
+		treeNode n3 = new treeNode(4);
+		treeNode n4 = new treeNode(5);
+		treeNode n5 = new treeNode(6);
+		treeNode n6 = new treeNode(7);
+		treeNode n7 = new treeNode(8);
+		treeNode n8 = new treeNode(9);
+		treeNode n9 = new treeNode(10);
+		treeNode n10 = new treeNode(11);
+		treeNode n11 = new treeNode(12);
 
-		root.addChild(ch1);
-		root.addChild(ch2);
-		ch1.addChild(ch3);
-		ch1.addChild(ch4);
-		ch2.addChild(ch5);
-		ch5.addChild(ch6);
-		System.out.println(root.leftChild.value);
-		System.out.println(root.rightChild.value);
-		System.out.println(root.children[0].value);
-		System.out.println(root.children[1].value);
-		listOfDepths(root, 1);
+		
+		root.addChild(n1);
+		root.addChild(n2);
+		n1.addChild(n3);
+		n1.addChild(n4);
+		n2.addChild(n5);
+		n2.addChild(n6);
+		n3.addChild(n7);
+		n7.addChild(n8);
+		n8.addChild(n9);
+		n8.addChild(n10);
+		n5.addChild(n11);
 
+//		for(treeNode n: n2.children) {
+//			System.out.println(n.value);
+//		}
+		
+		System.out.println(checkDepth(root, 0, 0));
+		System.out.println(checkDepth(root.rightChild, 0, 0));
+		System.out.println(checkBalanced(n1));
 	}
 }
