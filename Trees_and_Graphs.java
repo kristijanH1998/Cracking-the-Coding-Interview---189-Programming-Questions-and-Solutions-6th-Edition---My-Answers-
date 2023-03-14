@@ -67,6 +67,33 @@ class LinkedListNode {
 	}
 }
 
+class project{
+	private String name;
+	public ArrayList<project> dependent_on = new ArrayList<project>();
+	public ArrayList<project> required_for = new ArrayList<project>();
+	public int num_of_prereqs = 0;
+	public int num_of_dependents = 0;
+	
+	public void addPrereq (project x) {
+		this.dependent_on.add(x);
+		x.required_for.add(this);
+		this.num_of_prereqs++;
+		x.num_of_dependents++;
+	}
+	
+	public project(String name) {
+		this.setName(name);
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+}
+
 class treeNode{
 	public String name;
 	public boolean visited;
@@ -77,17 +104,20 @@ class treeNode{
 	public treeNode rightChild;
 	public treeNode[] children = {null, null};
 	public treeNode next;
+	public treeNode parent;
 	
 	public void addLeftChild(treeNode x) {
 		this.leftChild = x;
 		this.children[this.numOfChildren] = x;
 		this.numOfChildren++;
+		x.parent = this;
 	}
 	
 	public void addRightChild(treeNode x) {
 		this.rightChild = x;
 		this.children[this.numOfChildren] = x;
 		this.numOfChildren++;
+		x.parent = this;
 	}
 	
 	public treeNode() {
@@ -374,6 +404,56 @@ public class Trees_and_Graphs {
 		return min_value;
 	}
 	
+	public static treeNode successor (treeNode root) {
+		if(root.rightChild == null && root.leftChild == null) {
+			if (root.value <= root.parent.value) {
+				root = root.parent;
+			} else {
+				System.out.println("No successor node.");
+				return null;
+			}
+		}
+		
+		if(root.rightChild != null) {
+			root = root.rightChild;
+		} else {
+			System.out.println("No successor node.");
+			return null;
+		}
+		
+		while(root.leftChild != null) {
+			root = root.leftChild;
+		}
+		return root;
+	}
+	
+	public static ArrayList<project> buildOrder (ArrayList<project> projects) {
+		int i = 0;
+		ArrayList<project> order = new ArrayList<project>();
+		while(i < projects.size()) {
+			if(projects.get(i).dependent_on.size() == 0) {
+				order.add(projects.get(i));
+				projects.remove(i);
+				i--;
+			}
+			i++;
+		}
+		i = 0;
+		while(projects.size() != 0) {
+			for(project p: order.get(i).required_for) {
+				
+				p.dependent_on.remove(order.get(i));
+				
+				if(p.dependent_on.size() == 0) {
+					order.add(p);
+					projects.remove(p);
+				} 
+			}
+			i++;	
+		}
+		return order;
+	}
+	
 	public static void main(String[] args) {
 
 //		Graph g = new Graph();
@@ -434,24 +514,23 @@ public class Trees_and_Graphs {
 //		System.out.println(root.children[1].value);
 //		listOfDepths(root, 1);
 		
-		treeNode root = new treeNode(8);
-		treeNode n1 = new treeNode(4);
-		treeNode n2 = new treeNode(10);
-		treeNode n3 = new treeNode(2);
-		treeNode n4 = new treeNode(6);
-		treeNode n6 = new treeNode(20);
+//		treeNode root = new treeNode(3);
+//		treeNode n1 = new treeNode(1);
+//		treeNode n2 = new treeNode(10);
+//		treeNode n3 = new treeNode(6);
+//		treeNode n4 = new treeNode(17);
+//		treeNode n5 = new treeNode(20);
+//		treeNode n6 = new treeNode(5);
+//		treeNode n7 = new treeNode(4);
+//
+//		root.addLeftChild(n1);
+//		root.addRightChild(n2);
+//		n2.addLeftChild(n3);
+//		n2.addRightChild(n4);
+//		n4.addRightChild(n5);
+//		n3.addLeftChild(n6);
+//		n6.addLeftChild(n7);
 		
-		treeNode n5 = new treeNode(11);
-		
-		
-		root.addLeftChild(n1);
-		root.addRightChild(n2);
-		n1.addLeftChild(n3);
-		n1.addRightChild(n4);
-		n2.addRightChild(n6);
-		
-		n4.addRightChild(n5);
-
 //		for(treeNode n: n2.children) {
 //			System.out.println(n.value);
 //		}
@@ -461,8 +540,39 @@ public class Trees_and_Graphs {
 //		System.out.println(checkBalanced(n1));
 				
 //		validateBST(root);
-		System.out.println(maxNode(root));
-		System.out.println(minNode(root));
-		System.out.println(validateBST(root));
+//		System.out.println(maxNode(root));
+//		System.out.println(minNode(root));
+//		System.out.println(validateBST(root));
+//		System.out.println(n4.parent.value);
+//		System.out.println(n3.parent.value);
+		
+//		System.out.println(successor(root).value);
+		
+		project a = new project("a");
+		project b = new project("b");
+		project c = new project("c");
+		project d = new project("d");
+		project e = new project("e");
+		project f = new project("f");
+		
+		a.addPrereq(f);
+		d.addPrereq(a);
+		d.addPrereq(b);
+		b.addPrereq(f);
+		c.addPrereq(d);
+		project[] project_ar = {a,b,c,d,e,f};
+		ArrayList<project> projects = new ArrayList<project>();
+		for(int i = 0; i < project_ar.length; i++) {
+			projects.add(project_ar[i]);
+		}
+//		System.out.println(d.dependent_on.get(0).getName());
+//		System.out.println(d.dependent_on.get(1).getName());
+//		System.out.println(f.required_for.get(0).getName());
+//		System.out.println(f.required_for.get(1).getName());
+
+		projects = buildOrder(projects);
+		for(int i = 0; i < projects.size(); i++) {
+			System.out.print(projects.get(i).getName() + " ");
+		}
 	}
 }
