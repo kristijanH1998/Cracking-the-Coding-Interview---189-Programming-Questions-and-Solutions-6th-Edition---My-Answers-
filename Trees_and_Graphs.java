@@ -454,6 +454,49 @@ public class Trees_and_Graphs {
 		return order;
 	}
 	
+	public static int node_depth = 0;
+	
+	public static void findNodeDepth(treeNode root, treeNode node, int depth) {
+		
+		if(root != null) {
+			if(root == node) {
+				node_depth = depth;
+			}
+			depth++;
+			findNodeDepth(root.leftChild, node, depth);
+			findNodeDepth(root.rightChild, node, depth);
+		}
+	}
+
+	public static treeNode commonAncestor(treeNode root,treeNode node1, treeNode node2) {
+		if(node1 == node2) {
+			System.out.println("The two input nodes are the same node");
+			return null;
+		}
+		findNodeDepth(root, node1,0);
+		int depth1 = node_depth;
+		findNodeDepth(root, node2,0);
+		int depth2 = node_depth;
+		int depth_difference = Math.abs(depth1-depth2);
+		
+		if(depth1 < depth2) {
+			while(depth_difference != 0) {
+				node2 = node2.parent;
+				depth_difference--;
+			}
+		} else if (depth2 < depth1) {
+			while(depth_difference != 0) {
+				node1 = node1.parent;
+				depth_difference--;
+			}
+		}
+		while(node1 != node2) {
+			node1 = node1.parent;
+			node2 = node2.parent;
+		} 
+		return node1;
+	}
+	
 	public static void main(String[] args) {
 
 //		Graph g = new Graph();
@@ -514,22 +557,22 @@ public class Trees_and_Graphs {
 //		System.out.println(root.children[1].value);
 //		listOfDepths(root, 1);
 		
-//		treeNode root = new treeNode(3);
-//		treeNode n1 = new treeNode(1);
-//		treeNode n2 = new treeNode(10);
-//		treeNode n3 = new treeNode(6);
-//		treeNode n4 = new treeNode(17);
-//		treeNode n5 = new treeNode(20);
-//		treeNode n6 = new treeNode(5);
-//		treeNode n7 = new treeNode(4);
-//
-//		root.addLeftChild(n1);
-//		root.addRightChild(n2);
-//		n2.addLeftChild(n3);
-//		n2.addRightChild(n4);
-//		n4.addRightChild(n5);
-//		n3.addLeftChild(n6);
-//		n6.addLeftChild(n7);
+		treeNode root = new treeNode(3);
+		treeNode n1 = new treeNode(1);
+		treeNode n2 = new treeNode(10);
+		treeNode n3 = new treeNode(6);
+		treeNode n4 = new treeNode(17);
+		treeNode n5 = new treeNode(20);
+		treeNode n6 = new treeNode(5);
+		treeNode n7 = new treeNode(4);
+
+		root.addLeftChild(n1);
+		root.addRightChild(n2);
+		n2.addLeftChild(n3);
+		n2.addRightChild(n4);
+		n4.addRightChild(n5);
+		n3.addLeftChild(n6);
+		n6.addLeftChild(n7);
 		
 //		for(treeNode n: n2.children) {
 //			System.out.println(n.value);
@@ -548,31 +591,38 @@ public class Trees_and_Graphs {
 		
 //		System.out.println(successor(root).value);
 		
-		project a = new project("a");
-		project b = new project("b");
-		project c = new project("c");
-		project d = new project("d");
-		project e = new project("e");
-		project f = new project("f");
-		
-		a.addPrereq(f);
-		d.addPrereq(a);
-		d.addPrereq(b);
-		b.addPrereq(f);
-		c.addPrereq(d);
-		project[] project_ar = {a,b,c,d,e,f};
-		ArrayList<project> projects = new ArrayList<project>();
-		for(int i = 0; i < project_ar.length; i++) {
-			projects.add(project_ar[i]);
-		}
+//		project a = new project("a");
+//		project b = new project("b");
+//		project c = new project("c");
+//		project d = new project("d");
+//		project e = new project("e");
+//		project f = new project("f");
+//		project g = new project("g");
+//		
+//		b.addPrereq(f);
+//		c.addPrereq(f);
+//		a.addPrereq(f);
+//		a.addPrereq(c);
+//		a.addPrereq(b);
+//		e.addPrereq(a);
+//		e.addPrereq(b);
+//		g.addPrereq(d);
+
+//		project[] project_ar = {a,b,c,d,e,f,g};
+//		ArrayList<project> projects = new ArrayList<project>();
+//		for(int i = 0; i < project_ar.length; i++) {
+//			projects.add(project_ar[i]);
+//		}
 //		System.out.println(d.dependent_on.get(0).getName());
 //		System.out.println(d.dependent_on.get(1).getName());
 //		System.out.println(f.required_for.get(0).getName());
 //		System.out.println(f.required_for.get(1).getName());
 
-		projects = buildOrder(projects);
-		for(int i = 0; i < projects.size(); i++) {
-			System.out.print(projects.get(i).getName() + " ");
-		}
+//		projects = buildOrder(projects);
+//		for(int i = 0; i < projects.size(); i++) {
+//			System.out.print(projects.get(i).getName() + " ");
+//		}
+		
+		System.out.println(commonAncestor(root, n6,n4).value);
 	}
 }
