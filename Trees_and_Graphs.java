@@ -3,6 +3,7 @@ package trees_and_Graphs;
 import java.util.NoSuchElementException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 
 class LinkedListNode {
@@ -94,7 +95,7 @@ class project{
 	}
 }
 
-class treeNode{
+class treeNode {
 	public String name;
 	public boolean visited;
 	public boolean marked;
@@ -211,6 +212,47 @@ class Graph {
     public Node[] getNodes() {
         return vertices;
     }
+}
+
+class Tree_Node{
+	private int value;
+	public Tree_Node leftChild;
+	public Tree_Node rightChild;
+	public int getValue() {
+		return value;
+	}
+	public void setValue(int value) {
+		this.value = value;
+	}
+}
+
+class BinaryTree{
+	
+	
+	public Tree_Node root;
+	public ArrayList<treeNode> leaves;
+	
+	public Tree_Node getRandomNode(Tree_Node root) {
+		if(root.leftChild == null && root.rightChild == null) {
+			return root;
+		}
+		Random random = new Random();
+		int rand = random.nextInt(3);
+		
+		if(rand == 0 && (root.leftChild != null)) {
+			return getRandomNode(root.leftChild);
+		} else if(rand == 1) {
+			return root;
+		} else if(root.rightChild != null){
+			return getRandomNode(root.rightChild);
+		}
+		return null;
+	}
+	
+	public BinaryTree(Tree_Node root) {
+		this.root = root;
+	}
+	
 }
 
 public class Trees_and_Graphs {
@@ -606,7 +648,7 @@ public class Trees_and_Graphs {
 //		System.out.println(root.children[0].value);
 //		System.out.println(root.children[1].value);
 //		listOfDepths(root, 1);
-		
+				
 		treeNode root = new treeNode(3);
 		treeNode n1 = new treeNode(1);
 		treeNode n2 = new treeNode(10);
@@ -625,11 +667,11 @@ public class Trees_and_Graphs {
 		n6.addLeftChild(n7);
 		n4.addLeftChild(n8);
 		
-		treeNode testNode1 = new treeNode(1);
-		treeNode testNode2 = new treeNode(2);
-		treeNode testNode3 = new treeNode(3);
-		testNode1.addLeftChild(testNode2);
-		testNode1.addRightChild(testNode3);
+//		treeNode testNode1 = new treeNode(1);
+//		treeNode testNode2 = new treeNode(2);
+//		treeNode testNode3 = new treeNode(3);
+//		testNode1.addLeftChild(testNode2);
+//		testNode1.addRightChild(testNode3);
 
 //		for(treeNode n: n2.children) {
 //			System.out.println(n.value);
@@ -681,8 +723,21 @@ public class Trees_and_Graphs {
 //		}
 		
 //		System.out.println(commonAncestor(root, n6,n4).value);
-		String result = checkSubtree(root, testNode1) ? "Yes, T2 is a subtree in T1" : "No, T2 is"
-				+ " not a subtree in T1";
-		System.out.println(result);
+//		String result = checkSubtree(root, testNode1) ? "Yes, T2 is a subtree in T1" : "No, T2 is"
+//				+ " not a subtree in T1";
+//		System.out.println(result);
+		
+		Tree_Node Troot = new Tree_Node();
+		Tree_Node t1 = new Tree_Node();
+		Tree_Node t2 = new Tree_Node();
+
+		Troot.setValue(1);
+		t1.setValue(2);
+		t2.setValue(3);
+		Troot.leftChild = t1;
+		Troot.rightChild = t2;
+		
+		BinaryTree tree = new BinaryTree(Troot);
+		System.out.println(tree.getRandomNode(Troot).getValue());
 	}
 }
