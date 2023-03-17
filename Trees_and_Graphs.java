@@ -497,6 +497,56 @@ public class Trees_and_Graphs {
 		return node1;
 	}
 	
+	
+	
+	/*checkSubtree, addSubtree, and preOrderTraverse are three methods that together form a 
+	solution to problem 4.10 Check Subtree */
+	public static boolean checkSubtree(treeNode rootT1, treeNode rootT2) {
+		
+		ArrayList<String> list_of_paths = new ArrayList<String>();
+		addSubtree(rootT1, list_of_paths); 
+		for(String path: list_of_paths) {
+			System.out.println(path);
+		}
+		
+		String T2Path = preOrderTraverse(rootT2, "");
+		System.out.println(T2Path);
+		
+		for(String path: list_of_paths) {
+			if(T2Path.equals(path)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static void addSubtree(treeNode root, ArrayList<String> list) {
+		
+		if(root != null) {
+			if(!root.visited) {
+				list.add(preOrderTraverse(root, ""));
+			}
+			root.visited = true;
+			addSubtree(root.leftChild, list);
+			addSubtree(root.rightChild, list);
+			root.visited = false;
+		}
+	}
+	
+	public static String preOrderTraverse(treeNode node, String path) {
+		
+		if(node != null) {
+			if(!node.visited) {
+				path += (node.value + " ");
+			}
+			node.visited = true;
+			path = preOrderTraverse(node.leftChild, path);
+			path = preOrderTraverse(node.rightChild, path);
+			node.visited = false;
+		}
+		return path;
+	}
+	
 	public static void main(String[] args) {
 
 //		Graph g = new Graph();
@@ -565,7 +615,7 @@ public class Trees_and_Graphs {
 		treeNode n5 = new treeNode(20);
 		treeNode n6 = new treeNode(5);
 		treeNode n7 = new treeNode(4);
-
+		treeNode n8 = new treeNode(14);
 		root.addLeftChild(n1);
 		root.addRightChild(n2);
 		n2.addLeftChild(n3);
@@ -573,7 +623,14 @@ public class Trees_and_Graphs {
 		n4.addRightChild(n5);
 		n3.addLeftChild(n6);
 		n6.addLeftChild(n7);
+		n4.addLeftChild(n8);
 		
+		treeNode testNode1 = new treeNode(1);
+		treeNode testNode2 = new treeNode(2);
+		treeNode testNode3 = new treeNode(3);
+		testNode1.addLeftChild(testNode2);
+		testNode1.addRightChild(testNode3);
+
 //		for(treeNode n: n2.children) {
 //			System.out.println(n.value);
 //		}
@@ -623,6 +680,9 @@ public class Trees_and_Graphs {
 //			System.out.print(projects.get(i).getName() + " ");
 //		}
 		
-		System.out.println(commonAncestor(root, n6,n4).value);
+//		System.out.println(commonAncestor(root, n6,n4).value);
+		String result = checkSubtree(root, testNode1) ? "Yes, T2 is a subtree in T1" : "No, T2 is"
+				+ " not a subtree in T1";
+		System.out.println(result);
 	}
 }
