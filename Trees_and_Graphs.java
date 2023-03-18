@@ -589,27 +589,41 @@ public class Trees_and_Graphs {
 		return path;
 	}
 	
-	//4.12 pathsWithSum solution:
-	public static ArrayList<String> pathsWithSum(treeNode root, ArrayList<String> list){
-		
-		return list;
+	//4.12 pathsWithSum solution (three methods, printPathsWithSum, pathsWithSum and getPathSumRec:
+	
+	public static void printPathsWithSum(treeNode root, ArrayList<String> list, ArrayList<Integer> sums, int input) {
+		pathsWithSum(root,list,sums);
+		for(int i = 0; i < list.size(); i++) {
+			if(sums.get(i) == input) {
+				System.out.println(list.get(i));
+			}
+		}
 	}
 	
-	
-	public static void getPathSumRec(treeNode root, ArrayList<String> list, int sum, String path) {
+	public static ArrayList<String> pathsWithSum(treeNode root, ArrayList<String> list, ArrayList<Integer> sums){
+		if(root != null) {
+			getPathSumRec(root, list, 0, "", sums);
+			pathsWithSum(root.leftChild, list, sums);
+			pathsWithSum(root.rightChild, list, sums);
+		}
+		return list;
+	}
+
+	public static void getPathSumRec(treeNode root, ArrayList<String> list, int sum, String path, ArrayList<Integer> sums) {
 		if(root == null) {
 			return;
 		}
 		sum += root.value;
 		path += (((Integer)root.value).toString() + " ");
 		list.add(path + ((Integer)sum).toString());
+		sums.add(sum);
 		root.visited = true;
 		
 		if(root.leftChild != null && root.visited == true) {
-			getPathSumRec(root.leftChild, list, sum, path);
+			getPathSumRec(root.leftChild, list, sum, path, sums);
 		}
 		if(root.rightChild != null && root.visited == true) {
-			getPathSumRec(root.rightChild, list, sum, path);
+			getPathSumRec(root.rightChild, list, sum, path, sums);
 		}
 		root.visited = false;
 	}
@@ -765,10 +779,17 @@ public class Trees_and_Graphs {
 //		BinaryTree tree = new BinaryTree(Troot);
 //		System.out.println(tree.getRandomNode(Troot).getValue());
 		ArrayList<String> list = new ArrayList<String>();
-		getPathSumRec(root, list, 0, "");
-		for(String s: list) {
-			System.out.println(s);
-		}
-		
+		ArrayList<Integer> sums = new ArrayList<Integer>();
+		int input = 4;
+		printPathsWithSum(root, list, sums, input);
+//		for(String s: list) {
+//			System.out.println(s);
+//		}
+//		
+//		for(int sum: sums) {
+//			System.out.println(sum);
+//		}
+//		System.out.println(list.size());
+//		System.out.println(sums.size());
 	}
 }
