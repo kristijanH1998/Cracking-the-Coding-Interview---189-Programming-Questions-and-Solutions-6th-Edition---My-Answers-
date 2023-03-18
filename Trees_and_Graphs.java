@@ -589,6 +589,31 @@ public class Trees_and_Graphs {
 		return path;
 	}
 	
+	//4.12 pathsWithSum solution:
+	public static ArrayList<String> pathsWithSum(treeNode root, ArrayList<String> list){
+		
+		return list;
+	}
+	
+	
+	public static void getPathSumRec(treeNode root, ArrayList<String> list, int sum, String path) {
+		if(root == null) {
+			return;
+		}
+		sum += root.value;
+		path += (((Integer)root.value).toString() + " ");
+		list.add(path + ((Integer)sum).toString());
+		root.visited = true;
+		
+		if(root.leftChild != null && root.visited == true) {
+			getPathSumRec(root.leftChild, list, sum, path);
+		}
+		if(root.rightChild != null && root.visited == true) {
+			getPathSumRec(root.rightChild, list, sum, path);
+		}
+		root.visited = false;
+	}
+	
 	public static void main(String[] args) {
 
 //		Graph g = new Graph();
@@ -727,17 +752,23 @@ public class Trees_and_Graphs {
 //				+ " not a subtree in T1";
 //		System.out.println(result);
 		
-		Tree_Node Troot = new Tree_Node();
-		Tree_Node t1 = new Tree_Node();
-		Tree_Node t2 = new Tree_Node();
+//		Tree_Node Troot = new Tree_Node();
+//		Tree_Node t1 = new Tree_Node();
+//		Tree_Node t2 = new Tree_Node();
 
-		Troot.setValue(1);
-		t1.setValue(2);
-		t2.setValue(3);
-		Troot.leftChild = t1;
-		Troot.rightChild = t2;
+//		Troot.setValue(1);
+//		t1.setValue(2);
+//		t2.setValue(3);
+//		Troot.leftChild = t1;
+//		Troot.rightChild = t2;
 		
-		BinaryTree tree = new BinaryTree(Troot);
-		System.out.println(tree.getRandomNode(Troot).getValue());
+//		BinaryTree tree = new BinaryTree(Troot);
+//		System.out.println(tree.getRandomNode(Troot).getValue());
+		ArrayList<String> list = new ArrayList<String>();
+		getPathSumRec(root, list, 0, "");
+		for(String s: list) {
+			System.out.println(s);
+		}
+		
 	}
 }
