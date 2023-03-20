@@ -71,6 +71,44 @@ public class BitManipulation {
 		return N;
 	}
 	
+	public static String BinaryToString (double num, char[] chars) {
+		chars = String.valueOf(num).toCharArray();
+		String beforePoint = new String();
+		String afterPoint = new String();
+		int power = 0;
+		int i = 0;
+		while(chars[i] != '.') {
+			beforePoint = beforePoint + chars[i];
+			i++;
+		}
+		i++;
+		while(i < chars.length) {
+			afterPoint = afterPoint + chars[i];
+			power++;
+			i++;
+		}
+		System.out.println(beforePoint);
+		System.out.println(afterPoint);
+		double decimals = Integer.parseInt(afterPoint) / Math.pow(10, power);
+		afterPoint = "";
+		while(decimals != 0) {
+			decimals *= 2;
+			if(decimals < 1) {
+				afterPoint += "0";
+			} else {
+				afterPoint += "1";
+				decimals -= 1;
+			}
+		}
+		beforePoint = convertIntegerToBinary(Integer.parseInt(beforePoint)) + "." + afterPoint;
+		System.out.println(beforePoint.length() - 1);
+		if((beforePoint.length() - 1) > 32) {
+			System.out.println("ERROR");
+			return null;
+		}
+		return beforePoint;
+	}
+	
 	public static void main(String[] args) {
 //		System.out.println(getBit(4, 0));
 //		System.out.println(setBit(3, 2));
@@ -78,6 +116,8 @@ public class BitManipulation {
 //		System.out.println(clearBitMSBThroughI(6, 2));
 //		System.out.println(clearBitsIThrough0(7, 2));
 //		System.out.println(updateBit(9, 1, true));
-		System.out.println(insertion(19, 1024, 2, 6));
+//		System.out.println(insertion(19, 1024, 2, 6));
+		char[] chars = new char[40];
+		System.out.println(BinaryToString(20.375, chars));
 	}
 }
