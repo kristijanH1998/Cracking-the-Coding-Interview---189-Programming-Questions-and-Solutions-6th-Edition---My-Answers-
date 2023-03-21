@@ -1,7 +1,7 @@
 package bitManipulation;
 
-
-
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class BitManipulation {
 	public static String convertIntegerToBinary(int n) {
@@ -109,7 +109,53 @@ public class BitManipulation {
 		return beforePoint;
 	}
 	
-	public static void main(String[] args) {
+	public static int flipBitToWin(int num) throws Exception {
+		if(num == 0) {
+			return 1;
+		}
+		if(num == -1) {
+			System.out.println("No zeros in the input.");
+			throw new Exception("Error");
+		}
+		StringBuilder str = new StringBuilder();
+		str.append(convertIntegerToBinary(num));
+		ArrayList<Integer> zeros = new ArrayList<Integer>();
+		int index = 0;
+		while(index < str.length()) {
+			if(getBit(num, index) == false) {
+				zeros.add(index);
+			}
+			index++;
+		}
+		index = 0;
+		ArrayList<Integer> onesList = new ArrayList<Integer>();
+		int ones = 0;
+		int longest1sequence = 0;
+		for(int zero: zeros) {
+			num = setBit(num, zero);
+			while(index < str.length()) {
+				if(getBit(num, index) == true) {
+					while(getBit(num, index) == true) {
+						ones++;
+						index++;
+					} 
+					onesList.add(ones);
+				} else {
+					ones = 0;
+					index++;
+				}
+			}
+			longest1sequence = (longest1sequence < Collections.max(onesList)) 
+					? Collections.max(onesList) : longest1sequence;
+			num = clearBit(num, zero);
+			ones = 0;
+			index = 0;
+			onesList.clear();
+		}
+		return longest1sequence;
+	}
+
+	public static void main(String[] args) throws Exception {
 //		System.out.println(getBit(4, 0));
 //		System.out.println(setBit(3, 2));
 //		System.out.println(clearBit(5, 2));
@@ -117,7 +163,9 @@ public class BitManipulation {
 //		System.out.println(clearBitsIThrough0(7, 2));
 //		System.out.println(updateBit(9, 1, true));
 //		System.out.println(insertion(19, 1024, 2, 6));
-		char[] chars = new char[40];
-		System.out.println(BinaryToString(20.375, chars));
+//		char[] chars = new char[40];
+//		System.out.println(BinaryToString(20.375, chars));
+		System.out.println(flipBitToWin(39999202));
+		
 	}
 }
