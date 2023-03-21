@@ -154,6 +154,51 @@ public class BitManipulation {
 		}
 		return longest1sequence;
 	}
+	
+	//5.4 Next number solution: methods isPowerOfTwo, countOnes and nextNumber
+	
+	public static boolean isPowerOfTwo(int n)
+    {
+        if (n == 0)
+            return false;
+ 
+        while (n != 1) {
+            if (n % 2 != 0)
+                return false;
+            n = n / 2;
+        }
+        return true;
+    }
+	
+	public static void nextNumber(int num) {
+		int temp = num;
+		int num_of_ones = countOnes(num);
+		if(isPowerOfTwo(num + 1) == true) {
+			System.out.println("No next smallest number.");
+		} else {
+			num = num - 1;
+			while(countOnes(num) != num_of_ones) {
+				num -= 1;
+			}
+			System.out.println("The next smallest number is: " + num);
+		}
+		num = temp + 1;
+		while(countOnes(num) != num_of_ones) {
+			num += 1;
+		}
+		System.out.println("The next largest number is: " + num);
+	}
+	
+	public static int countOnes(int num) {
+		int count = 0;
+		while (num > 0) {
+			if((num % 2) == 1) {
+		        count += 1;
+		    }   
+			num /= 2;
+		}
+		return count;
+	}
 
 	public static void main(String[] args) throws Exception {
 //		System.out.println(getBit(4, 0));
@@ -165,7 +210,10 @@ public class BitManipulation {
 //		System.out.println(insertion(19, 1024, 2, 6));
 //		char[] chars = new char[40];
 //		System.out.println(BinaryToString(20.375, chars));
-		System.out.println(flipBitToWin(39999202));
+//		System.out.println(flipBitToWin(39999202));
+		nextNumber(8899992);
+		System.out.println(Integer.toString(countOnes(8899988)) + " " + Integer.toString(countOnes(8899992)) + " " +
+				Integer.toString(countOnes(8900001)));
 		
 	}
 }
