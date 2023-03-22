@@ -4,6 +4,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class BitManipulation {
+	
+	public static int numOfDigits(int num) {
+		int count = 0;
+		while(num != 0) {
+			num >>= 1;
+			count++;
+		}
+		return count;
+	}
+	
 	public static String convertIntegerToBinary(int n) {
 	    if (n == 0) {
 	        return "0";
@@ -199,7 +209,27 @@ public class BitManipulation {
 		}
 		return count;
 	}
-
+	
+	//returns true if "num" is a power of 2, and false otherwise
+	public static boolean debugger(int num) {
+		return ((num & (num - 1)) == 0);
+	}
+	
+	public static int conversion(int num1, int num2) {
+		int diff = 0;
+		if(num1 == num2) {
+			return diff;
+		} 
+		int i = 0;
+		while(i < Math.max(numOfDigits(num1), numOfDigits(num2))) {
+			if(getBit(num1, i) != getBit(num2,i)) {
+				diff++;
+			}
+			i++;
+		}
+		return diff;
+	}
+	
 	public static void main(String[] args) throws Exception {
 //		System.out.println(getBit(4, 0));
 //		System.out.println(setBit(3, 2));
@@ -211,9 +241,10 @@ public class BitManipulation {
 //		char[] chars = new char[40];
 //		System.out.println(BinaryToString(20.375, chars));
 //		System.out.println(flipBitToWin(39999202));
-		nextNumber(8899992);
-		System.out.println(Integer.toString(countOnes(8899988)) + " " + Integer.toString(countOnes(8899992)) + " " +
-				Integer.toString(countOnes(8900001)));
-		
+//		nextNumber(8899992);
+//		System.out.println(Integer.toString(countOnes(8899988)) + " " + Integer.toString(countOnes(8899992)) + " " +
+//				Integer.toString(countOnes(8900001)));
+//		System.out.println(debugger(0));
+		System.out.println(conversion(2, 2000));
 	}
 }
