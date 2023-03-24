@@ -230,6 +230,42 @@ public class BitManipulation {
 		return diff;
 	}
 	
+	public static int swap (int n) {
+		System.out.println(convertIntegerToBinary(n & 0xaaaaaaaa));
+		System.out.println(convertIntegerToBinary(n & 0x55555555));
+		System.out.println(convertIntegerToBinary((n & 0xaaaaaaaa) >>> 1));
+		System.out.println(convertIntegerToBinary((n & 0x55555555) << 1));
+		System.out.println(convertIntegerToBinary(((n & 0xaaaaaaaa) >>> 1) | ((n & 0x55555555) << 1)));
+		return (((n & 0xaaaaaaaa) >>> 1) | ((n & 0x55555555) << 1));
+	}
+	
+	public static void drawLine(byte[] screen, int width, int x1, int x2, int y) {
+		if((width % 8 != 0) || (x1 >= width || x2 >= width) || (y >= (screen.length / width))) {
+			System.out.println("Error");
+			return;
+		}
+		int height = screen.length / width;
+		System.out.println("Height = " + height);
+		System.out.println("The screen before the change: ");
+		for(int i = 0; i < screen.length; i++) {
+			System.out.print(screen[i] + " ");
+			if((i + 1) % width == 0) {
+				System.out.println();
+			}
+		}
+		while(x1 <= x2) {
+			screen[(y * width) + x1] += 1;
+			x1++;
+		}
+		System.out.println("The screen after the change: ");
+		for(int i = 0; i < screen.length; i++) {
+			System.out.print(screen[i] + " ");
+			if((i + 1) % width == 0) {
+				System.out.println();
+			}
+		}
+	}
+	
 	public static void main(String[] args) throws Exception {
 //		System.out.println(getBit(4, 0));
 //		System.out.println(setBit(3, 2));
@@ -245,6 +281,11 @@ public class BitManipulation {
 //		System.out.println(Integer.toString(countOnes(8899988)) + " " + Integer.toString(countOnes(8899992)) + " " +
 //				Integer.toString(countOnes(8900001)));
 //		System.out.println(debugger(0));
-		System.out.println(conversion(2, 2000));
+//		System.out.println(conversion(2, 2000));
+//		System.out.println(swap(18));
+		byte[] screen = {0,0,0,0,0,0,0,0,
+				         0,0,0,0,0,0,0,0,
+				         0,0,0,0,0,0,0,0};
+		drawLine(screen, 8, 0, 7, 0);
 	}
 }
