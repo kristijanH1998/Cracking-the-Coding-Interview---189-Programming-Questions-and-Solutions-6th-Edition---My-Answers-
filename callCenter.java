@@ -5,54 +5,41 @@ enum Title {respondent, manager, director};
 class Center {
 	ArrayList<employee> employees = new ArrayList<employee>();
 	ArrayList<employee> freeEmployeeList = new ArrayList<employee>();
-
 	public Center(ArrayList<employee> employees) {
 		this.employees = employees;
-		this.freeEmployeeList = employees;
+		freeEmployeeList.addAll(employees);
 	}
 	public void printFreeEmployees() {
 		for(employee e: freeEmployeeList) {
 			System.out.println(e.getName());
 		}
 	}
-	
 	public void dispatchCall(Call call) {
 		if(this.freeEmployeeList.isEmpty()) {
 			System.out.println("No available employees!");
 		} else {
-			int i = 0;
-			while((i < freeEmployeeList.size()) && (freeEmployeeList.get(i).getTitle() != Title.respondent ||
-					!freeEmployeeList.get(i).canHandle)) {
-				i++;
-			}
-			if(i == freeEmployeeList.size() - 1) {
-				i = 0;
-				while((i < freeEmployeeList.size()) && (freeEmployeeList.get(i).getTitle() != Title.manager ||
-					!freeEmployeeList.get(i).canHandle)) {
-					i++;
-				}
-				if(i == freeEmployeeList.size() - 1) {
-					i = 0;
-					while((i < freeEmployeeList.size()) && (freeEmployeeList.get(i).getTitle() != Title.director ||
-							!freeEmployeeList.get(i).canHandle)) {
-							i++;
-					}
-					freeEmployeeList.get(i).acceptCall(call);
-					freeEmployeeList.remove(i);
+			for(employee e: freeEmployeeList) {
+				if((e.getTitle() == Title.respondent) && e.canHandle) {
+					e.acceptCall(call);
+					freeEmployeeList.remove(e);
+					break;
+				} else if((e.getTitle() == Title.manager) && e.canHandle) {
+					e.acceptCall(call);
+					freeEmployeeList.remove(e);
+					break;
+				} else if(e.canHandle) {
+					e.acceptCall(call);
+					freeEmployeeList.remove(e);
+					break;
 				} else {
-					freeEmployeeList.get(i).acceptCall(call);
-					freeEmployeeList.remove(i);
+					System.out.println("Call cannot be serviced by " + e.getName());	
 				}
-			} else {
-				freeEmployeeList.get(i).acceptCall(call);
-				freeEmployeeList.remove(i);
 			}
 			System.out.println("Remaining available employees: ");
 			printFreeEmployees();
 		}
 	}
 }
-
 class employee{
 	private boolean free = true;
 	private String name = "";
@@ -62,7 +49,6 @@ class employee{
 	public employee() {
 		
 	}
-	
 	public void acceptCall(Call call) {
 		if(this.free){
 			this.free = false;
@@ -73,8 +59,11 @@ class employee{
 	public String getName() {
 		return this.name;
 	}
-	public Call getCall() {
-		return this.callProcessed;
+	public String getCall() {
+		if(this.callProcessed != null) {
+			return this.callProcessed.name;
+		} 
+		return "";
 	}
 	public void setName(String name) {
 		this.name = name;
@@ -86,21 +75,23 @@ class employee{
 		return this.title;
 	}
 }
-
 class Call{
 	private boolean accepted = false;
+	public String name = "";
 	
-	public Call() {
-		
+	public String getCallName() {
+		return this.name;
+	}
+	
+	public Call(String name) {
+		this.name = name;
 	}
 	
 	public void accept(boolean accepted) {
 		this.accepted = true;
 	}
 }
-
 public class callCenter {
-
 	public static void main(String[] args) {
 		ArrayList<employee> employees= new ArrayList<employee>();
 		String[] names = {"A", "B", "C", "D", "E", "F", "G", "H", "I"};
@@ -118,21 +109,19 @@ public class callCenter {
 		}
 		employees.get(1).canHandle = false;
 		employees.get(7).canHandle = false;
-
 		Center center = new Center(employees);
-		Call c1 = new Call();
-		Call c2 = new Call();
-		Call c3 = new Call();
+		Call c1 = new Call("c1");
+		Call c2 = new Call("c2");
+		Call c3 = new Call("c3");
 		ArrayList<Call> calls = new ArrayList<Call>();
 		calls.add(c1);
 		calls.add(c2);
-		calls.add(c3);
-		
+		calls.add(c3);	
 		for(Call call: calls) {
 			center.dispatchCall(call);
 		}
 		for(employee e: employees) {
-			System.out.print(e.getName() + " " + e.getCall());
+			System.out.println(e.getName() + " " + e.getTitle() + " " + e.getCall());
 		}
 	}
 }
