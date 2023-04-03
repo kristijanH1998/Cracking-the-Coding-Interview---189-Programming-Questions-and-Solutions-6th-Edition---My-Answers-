@@ -2,22 +2,33 @@ package objectOrientedDesign;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Scanner;
 enum player{w, b, empty};
 enum Direction{N,W,S,E,NW,NE,SW,SE};
 abstract class User{
 	protected ArrayList<Square> validMoves;
 	protected int score;
+	protected boolean turn;
+	public int getScore() {
+		return this.score;
+	}
+	public void setTurn(boolean turn) {
+		this.turn = turn;
+	}
+	public boolean getTurn() {
+		return this.turn;
+	}
 }
 class White extends User{
-	private boolean turn = false;
-	public boolean playsNext() {
-		return turn;
+	public White(boolean turn) {
+		this.turn = turn;
+		this.score = 2;
 	}
 }
 class Black extends User{
-	private boolean turn = true;
-	public boolean playsNext() {
-		return turn;
+	public Black(boolean turn) {
+		this.turn = turn;
+		this.score = 2;
 	}
 }
 //Attributes Square N - Square SE are pointers to squares up, down, to the right, to the left, and in diagonal directions
@@ -117,16 +128,17 @@ class GameOthello{
 	public boolean checkCurrent(Square pointed) {
 		return pointed == null || pointed.getPlayer() == player.empty;
 	}
-	public boolean placeDisc(Square[][] board, int i, int j, player p) {
+	public boolean placeDisc(Square[][] board, int i, int j, player p, User user1, User user2) {
+		user1.score++;
 		Square current = board[i][j];
-		if(		checkCurrent(current.N) && 
+		if(		(checkCurrent(current.N) && 
 				checkCurrent(current.W) && 
 				checkCurrent(current.E) && 
 				checkCurrent(current.S) &&
 				checkCurrent(current.NW) && 
 				checkCurrent(current.NE) && 
 				checkCurrent(current.SW) && 
-				checkCurrent(current.SE)) {
+				checkCurrent(current.SE)) || board[i][j].getPlayer() != player.empty) {
 			System.out.println("Error. Illegal move.");
 			return false;
 		} 
@@ -168,59 +180,75 @@ class GameOthello{
 		}
 		Square temp = new Square();
 		switch(dir) {
-			case N:				
+			case N:	
 				temp = board[i][j].N;
-				while(temp.getPlayer() != p) {
+				while(temp != null && temp.getPlayer() != p) {
 					temp.setPlayer(p);
+					user1.score++;
+					user2.score--;
 					temp = temp.N;
 				}
 				break;
 			case W:				
 				temp = board[i][j].W;
-				while(temp.getPlayer() != p) {
+				while(temp != null && temp.getPlayer() != p) {
 					temp.setPlayer(p);
+					user1.score++;
+					user2.score--;
 					temp = temp.W;
 				}
 				break;
 			case E:				
 				temp = board[i][j].E;
-				while(temp.getPlayer() != p) {
+				while(temp != null && temp.getPlayer() != p) {
 					temp.setPlayer(p);
+					user1.score++;
+					user2.score--;
 					temp = temp.E;
 				}
 				break;
 			case S:				
 				temp = board[i][j].S;
-				while(temp.getPlayer() != p) {
+				while(temp != null && temp.getPlayer() != p) {
 					temp.setPlayer(p);
+					user1.score++;
+					user2.score--;
 					temp = temp.S;
 				}
 				break;
 			case NW:				
 				temp = board[i][j].NW;
-				while(temp.getPlayer() != p) {
+				while(temp != null && temp.getPlayer() != p) {
 					temp.setPlayer(p);
+					user1.score++;
+					user2.score--;
 					temp = temp.NW;
 				}
 				break;
 			case NE:				
 				temp = board[i][j].NE;
-				while(temp.getPlayer() != p) {
+				while(temp != null && temp.getPlayer() != p) {
 					temp.setPlayer(p);
+					user1.score++;
+					user2.score--;
 					temp = temp.NE;
 				}
 				break;
 			case SW:				
 				temp = board[i][j].SW;
-				while(temp.getPlayer() != p) {
+				while(temp != null && temp.getPlayer() != p) {
 					temp.setPlayer(p);
+					user1.score++;
+					user2.score--;
 					temp = temp.SW;
 				}
 				break;
 			case SE:				
 				temp = board[i][j].SE;
-				while(temp.getPlayer() != p) {
+				while(temp != null && temp.getPlayer() != p) {
 					temp.setPlayer(p);
+					user1.score++;
+					user2.score--;
 					temp = temp.SE;
 				}
 				break;
@@ -364,13 +392,51 @@ public class Othello {
 	public static void playOthello(GameOthello game, White white, Black black) {
 		Square[][] board = game.createStartPosition();
 		game.printBoard(board);
-		game.placeDisc(board, 7, 7, player.b);
-		game.printBoard(board);
+		Scanner input = new Scanner(System.in);
+		System.out.println("Welcome to Othello. To exit, enter '~'.");
+		String userInput = "";
+		String firstCoordinate = "";
+		String secondCoordinate = "";
+		
+		while(!userInput.equals("~")) {
+			System.out.println("Black's score: " + black.score);
+			System.out.println("White's score: " + white.score);
+			System.out.print("Enter the row and column of the field to place the disk in. ");
+			if(black.getTurn() == true) {
+				System.out.println("Black's turn:");
+				userInput = input.nextLine();
+				firstCoordinate = userInput;
+				userInput = input.nextLine();
+				secondCoordinate = userInput;
+				if(game.placeDisc(board, Integer.valueOf(firstCoordinate), Integer.valueOf(secondCoordinate), player.b, black, white)) {
+					white.setTurn(true);
+					black.setTurn(false);
+				} else{
+					white.setTurn(false);
+					black.setTurn(true);
+				};
+				
+			} else {
+				System.out.println("White's turn:");
+				userInput = input.nextLine();
+				firstCoordinate = userInput;
+				userInput = input.nextLine();
+				secondCoordinate = userInput;
+				if(game.placeDisc(board, Integer.valueOf(firstCoordinate), Integer.valueOf(secondCoordinate), player.w, white, black)) {
+					white.setTurn(false);
+					black.setTurn(true);
+				} else{
+					white.setTurn(true);
+					black.setTurn(false);
+				};
+			}
+			game.printBoard(board);
+		}
 	}
 	public static void main(String[] args) {
 		GameOthello g = new GameOthello();
-		White w = new White();
-		Black b = new Black();
+		White w = new White(false);
+		Black b = new Black(true);
 		playOthello(g, w, b);
 	}
 }
