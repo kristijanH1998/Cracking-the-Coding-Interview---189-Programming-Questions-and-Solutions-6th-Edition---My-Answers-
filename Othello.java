@@ -129,7 +129,6 @@ class GameOthello{
 		return pointed == null || pointed.getPlayer() == player.empty;
 	}
 	public boolean placeDisc(Square[][] board, int i, int j, player p, User user1, User user2) {
-		user1.score++;
 		Square current = board[i][j];
 		if(		(checkCurrent(current.N) && 
 				checkCurrent(current.W) && 
@@ -171,6 +170,12 @@ class GameOthello{
 		lineSizes.put(selist.size(), selist);
 		directions.put(Direction.SE, selist);
 		int maxLineSize = Collections.max(lineSizes.keySet());
+		if(maxLineSize == 0) {
+			System.out.println("Ineffective move, try again.");
+			board[i][j].setPlayer(player.empty);
+			return false;
+		}
+		user1.score++;
 		Direction dir = null;
 		for(Direction d: directions.keySet()) {
 			if(directions.get(d).size() == maxLineSize) {
@@ -183,72 +188,88 @@ class GameOthello{
 			case N:	
 				temp = board[i][j].N;
 				while(temp != null && temp.getPlayer() != p) {
+					if(temp.getPlayer() != player.empty) {
+						user2.score--;
+					}
 					temp.setPlayer(p);
 					user1.score++;
-					user2.score--;
 					temp = temp.N;
 				}
 				break;
 			case W:				
 				temp = board[i][j].W;
 				while(temp != null && temp.getPlayer() != p) {
+					if(temp.getPlayer() != player.empty) {
+						user2.score--;
+					}
 					temp.setPlayer(p);
 					user1.score++;
-					user2.score--;
 					temp = temp.W;
 				}
 				break;
 			case E:				
 				temp = board[i][j].E;
 				while(temp != null && temp.getPlayer() != p) {
+					if(temp.getPlayer() != player.empty) {
+						user2.score--;
+					}
 					temp.setPlayer(p);
 					user1.score++;
-					user2.score--;
 					temp = temp.E;
 				}
 				break;
 			case S:				
 				temp = board[i][j].S;
 				while(temp != null && temp.getPlayer() != p) {
+					if(temp.getPlayer() != player.empty) {
+						user2.score--;
+					}
 					temp.setPlayer(p);
 					user1.score++;
-					user2.score--;
 					temp = temp.S;
 				}
 				break;
 			case NW:				
 				temp = board[i][j].NW;
 				while(temp != null && temp.getPlayer() != p) {
+					if(temp.getPlayer() != player.empty) {
+						user2.score--;
+					}
 					temp.setPlayer(p);
 					user1.score++;
-					user2.score--;
 					temp = temp.NW;
 				}
 				break;
 			case NE:				
 				temp = board[i][j].NE;
 				while(temp != null && temp.getPlayer() != p) {
+					if(temp.getPlayer() != player.empty) {
+						user2.score--;
+					}
 					temp.setPlayer(p);
 					user1.score++;
-					user2.score--;
 					temp = temp.NE;
 				}
 				break;
 			case SW:				
 				temp = board[i][j].SW;
 				while(temp != null && temp.getPlayer() != p) {
+					if(temp.getPlayer() != player.empty) {
+						user2.score--;
+					}
 					temp.setPlayer(p);
 					user1.score++;
-					user2.score--;
 					temp = temp.SW;
 				}
 				break;
 			case SE:				
 				temp = board[i][j].SE;
 				while(temp != null && temp.getPlayer() != p) {
+					if(temp.getPlayer() != player.empty) {
+						user2.score--;
+					}
 					temp.setPlayer(p);
 					user1.score++;
-					user2.score--;
 					temp = temp.SE;
 				}
 				break;
@@ -261,11 +282,12 @@ class GameOthello{
 			return null;
 		}
 		Square temp = board[i-1][j];
-		while(temp != null && temp.getPlayer() != board[i][j].getPlayer()) {
+		while(temp.N != null && temp.getPlayer() != board[i][j].getPlayer()) {
 			nlist.add(temp); 
 			temp = temp.N;
 		}
-		if(temp == null) {
+		nlist.add(temp);
+		if(temp.getPlayer() != board[i][j].getPlayer()) {
 			nlist.clear();
 		}
 		return nlist;
@@ -276,11 +298,12 @@ class GameOthello{
 			return null;
 		}
 		Square temp = board[i][j-1];
-		while(temp != null && temp.getPlayer() != board[i][j].getPlayer()) {
+		while(temp.W != null && temp.getPlayer() != board[i][j].getPlayer()) {
 			wlist.add(temp); 
 			temp = temp.W;
 		}
-		if(temp == null) {
+		wlist.add(temp);
+		if(temp.getPlayer() != board[i][j].getPlayer()) {
 			wlist.clear();
 		}
 		return wlist;
@@ -291,11 +314,12 @@ class GameOthello{
 			return null;
 		}
 		Square temp = board[i][j+1];
-		while(temp != null && temp.getPlayer() != board[i][j].getPlayer()) {
+		while(temp.E != null && temp.getPlayer() != board[i][j].getPlayer()) {
 			elist.add(temp); 
 			temp = temp.E;
 		}
-		if(temp == null) {
+		elist.add(temp);
+		if(temp.getPlayer() != board[i][j].getPlayer()) {
 			elist.clear();
 		}
 		return elist;
@@ -306,11 +330,12 @@ class GameOthello{
 			return null;
 		}
 		Square temp = board[i+1][j];
-		while(temp != null && temp.getPlayer() != board[i][j].getPlayer()) {
+		while(temp.S != null && temp.getPlayer() != board[i][j].getPlayer()) {
 			slist.add(temp); 
 			temp = temp.S;
 		}
-		if(temp == null) {
+		slist.add(temp);
+		if(temp.getPlayer() != board[i][j].getPlayer()) {
 			slist.clear();
 		}
 		return slist;
@@ -321,11 +346,12 @@ class GameOthello{
 			return null;
 		}
 		Square temp = board[i-1][j-1];
-		while(temp != null && temp.getPlayer() != board[i][j].getPlayer()) {
+		while(temp.NW != null && temp.getPlayer() != board[i][j].getPlayer()) {
 			nwlist.add(temp); 
 			temp = temp.NW;
 		}
-		if(temp == null) {
+		nwlist.add(temp);
+		if(temp.getPlayer() != board[i][j].getPlayer()) {
 			nwlist.clear();
 		}
 		return nwlist;
@@ -336,11 +362,12 @@ class GameOthello{
 			return null;
 		}
 		Square temp = board[i-1][j+1];
-		while(temp != null && temp.getPlayer() != board[i][j].getPlayer()) {
+		while(temp.NE != null && temp.getPlayer() != board[i][j].getPlayer()) {
 			nelist.add(temp); 
 			temp = temp.NE;
 		}
-		if(temp == null) {
+		nelist.add(temp);
+		if(temp.getPlayer() != board[i][j].getPlayer()) {
 			nelist.clear();
 		}
 		return nelist;
@@ -351,11 +378,12 @@ class GameOthello{
 			return null;
 		}
 		Square temp = board[i+1][j-1];
-		while(temp != null && temp.getPlayer() != board[i][j].getPlayer()) {
+		while(temp.SW != null && temp.getPlayer() != board[i][j].getPlayer()) {
 			swlist.add(temp); 
 			temp = temp.SW;
 		}
-		if(temp == null) {
+		swlist.add(temp);
+		if(temp.getPlayer() != board[i][j].getPlayer()) {
 			swlist.clear();
 		}
 		return swlist;
@@ -366,11 +394,12 @@ class GameOthello{
 			return null;
 		}
 		Square temp = board[i+1][j+1];
-		while(temp != null && temp.getPlayer() != board[i][j].getPlayer()) {
+		while(temp.SE != null && temp.getPlayer() != board[i][j].getPlayer()) {
 			selist.add(temp); 
 			temp = temp.SE;
 		}
-		if(temp == null) {
+		selist.add(temp);
+		if(temp.getPlayer() != board[i][j].getPlayer()) {
 			selist.clear();
 		}
 		return selist;
@@ -399,6 +428,16 @@ public class Othello {
 		String secondCoordinate = "";
 		
 		while(!userInput.equals("~")) {
+			if((white.getScore() + black.getScore()) == (game.boardLength * game.boardHeight)) {
+				if(white.getScore() > black.getScore()) {
+					System.out.println("White wins.");
+				} else if (white.getScore() < black.getScore()) {
+					System.out.println("Black wins.");
+				} else {
+					System.out.println("Draw.");
+				}
+				break;
+			}
 			System.out.println("Black's score: " + black.score);
 			System.out.println("White's score: " + white.score);
 			System.out.print("Enter the row and column of the field to place the disk in. ");
