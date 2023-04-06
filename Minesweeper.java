@@ -53,6 +53,11 @@ class Board{
 	static final int boardWidth = 7;
 	static final int boardHeight = 7;
 	Cell[][] grid = new Cell[boardWidth][boardHeight];
+	private int numOfBombs = 0;
+	private int numOfUndiscoveredNonBombs = boardWidth * boardHeight;
+	public int getNumOfUndiscoveredNonBombCells() {
+		return this.numOfUndiscoveredNonBombs;
+	}
 	public Board() {
 	}
 	public void setBoardAtStart(){
@@ -120,6 +125,8 @@ class Board{
 	public void changeContent(CellContent content, Cell[][] grid, int row, int col) {
 		grid[row][col].setContent(content);
 		if(content == CellContent.bomb) {
+			this.numOfBombs++;
+			this.numOfUndiscoveredNonBombs--;
 			if(grid[row][col].up != null) {
 				grid[row][col].up.setContent(CellContent.number);
 				grid[row][col].up.increaseNumOfAdjBombs();		
@@ -158,10 +165,12 @@ class Board{
 		if(!this.grid[row][col].isDiscovered()) {
 			if(this.grid[row][col].getContent() == CellContent.bomb) {
 				this.grid[row][col].discover();
+				this.numOfUndiscoveredNonBombs--;
 				System.out.println("Bomb! End game. You lose.");
 				System.exit(0);
 			} else if(this.grid[row][col].getContent() == CellContent.number) {
 				this.grid[row][col].discover();
+				this.numOfUndiscoveredNonBombs--;
 			} else {
 				uncover(row,col, this.grid);
 			}
@@ -174,6 +183,7 @@ class Board{
 	public void uncover(int row, int col, Cell[][] grid) {
 		if(!grid[row][col].isDiscovered()) {
 			grid[row][col].discover();
+			this.numOfUndiscoveredNonBombs--;
 			if(grid[row][col].getContent() == CellContent.number) {
 				return;
 			} else if (grid[row][col].getContent() == CellContent.empty) {
@@ -207,7 +217,6 @@ class Board{
 		}
 	}
 }
-
 public class Minesweeper {
 	public static void main(String[] args) {
 		Board board = new Board();
@@ -220,7 +229,9 @@ public class Minesweeper {
 		Scanner scanner = new Scanner(System.in);
 		System.out.print("To end the game, enter '~'.");
 		String input = "";
-		while(input != "~") {
+		while(input != "~" && (board.getNumOfUndiscoveredNonBombCells() > 0)) {
+			System.out.println("Non-bomb cells remaining to be explored: " + 
+					board.getNumOfUndiscoveredNonBombCells());
 			System.out.println(" Enter row and column coordinates of the cell you want to explore: ");
 			input = scanner.next();
 			int row = Integer.valueOf(input);
@@ -231,6 +242,9 @@ public class Minesweeper {
 				continue;
 			};
 			board.printBoard();
+		}
+		if(board.getNumOfUndiscoveredNonBombCells() == 0) {
+			System.out.print("Congratulations! You win.");
 		}
 //		for(Cell c: board.getGrid()[2][1].getAdjacents()) {
 //			System.out.println(c.getContent());
