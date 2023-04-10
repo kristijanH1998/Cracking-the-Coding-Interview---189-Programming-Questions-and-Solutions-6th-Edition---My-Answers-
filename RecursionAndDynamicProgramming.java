@@ -82,6 +82,38 @@ public class RecursionAndDynamicProgramming {
 			RobotInAGrid(path, grid, ++row, col);
 		}
 	}
+	
+	public static boolean sorted(int[] ar) {
+		boolean result = true;
+		for(int i = 0; i < ar.length - 1; i++) {
+			result = (ar[i] <= ar[i + 1]) ? true : false;
+			if(result == false) {
+				return result;
+			}
+		}
+		return result;
+	}
+	//returns the magical index in the array ar. Magical index i is when ar[i] = i.
+	public static void magicIndex(int[] ar, int start, int end) {
+		int mid = start + (end - start) / 2;
+		if((start >= end) && (ar[mid] != mid)) {
+			System.out.print("No magical index.");
+			return;
+		}
+		if(ar[mid] == mid) {
+			System.out.println("The magical index is: " + mid);
+			return;
+		} else {
+			if(ar[mid] > mid) {
+				magicIndex(ar, start, mid-1);
+			} else {
+				if(ar[mid] < mid) {
+					magicIndex(ar, mid+1, end);
+				}
+			}
+		}
+		return;
+	}
 	public static void main(String[] args) {
 //		ArrayList<ArrayList<Integer>> paths = new ArrayList<ArrayList<Integer>>();
 //		ArrayList<Integer> path = new ArrayList<Integer>();
@@ -89,11 +121,17 @@ public class RecursionAndDynamicProgramming {
 //		for(ArrayList<Integer> p: paths) {
 //			System.out.println(p);
 //		}
-		int[][] grid = makeGrid(4,4);
-		ArrayList<Integer> path = new ArrayList<Integer>();
-		RobotInAGrid(path, grid, 0, 0);
+//		int[][] grid = makeGrid(4,4);
+//		ArrayList<Integer> path = new ArrayList<Integer>();
+//		RobotInAGrid(path, grid, 0, 0);
 //		for(int i: path) {
 //			System.out.print(i + " ");
 //		}
+		int[] ar = {10,10,10,10,10,10,10,10,10,10};
+		if(!sorted(ar)) {
+			System.out.println("Error. Unsorted Array."); 
+			return;
+		} 
+		magicIndex(ar, 0, 9);
 	}
 }
