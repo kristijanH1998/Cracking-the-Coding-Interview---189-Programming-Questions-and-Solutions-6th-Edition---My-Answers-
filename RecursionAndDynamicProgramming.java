@@ -1,7 +1,8 @@
 package recursionAndDynamicProgramming;
 import java.util.ArrayList;
-
-
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Collections;
 
 public class RecursionAndDynamicProgramming {
 	public static int sum (ArrayList<Integer> list) {
@@ -114,6 +115,33 @@ public class RecursionAndDynamicProgramming {
 		}
 		return;
 	}
+	public static ArrayList<Integer> toArray(Set<Integer> set){
+		ArrayList<Integer> ar = new ArrayList<Integer>();
+		for(int element: set) {
+			ar.add(element);
+		}
+		return ar;
+	}
+	public static ArrayList<Set<Integer>> powerSet(Set<Integer> set, ArrayList<Set<Integer>> powerSets) {
+		ArrayList<Integer> elements = toArray(set);
+		for(int j = 0; j < elements.size(); j++) {
+			Set<Integer> s = new HashSet<Integer>();		
+			for(int i = j; i < elements.size(); i++) {
+				s.add(elements.get(i));
+			}
+			powerSets.add(s);
+		}
+		set.remove(elements.get(elements.size() - 1));
+		if(set.size() == 1) {
+			powerSets.add(set);
+	        Set<Integer> emptySet = Collections.<Integer>emptySet();  
+			powerSets.add(emptySet);
+			return null;
+		} else {
+			powerSet(set, powerSets);
+		}
+		return powerSets;
+	}
 	public static void main(String[] args) {
 //		ArrayList<ArrayList<Integer>> paths = new ArrayList<ArrayList<Integer>>();
 //		ArrayList<Integer> path = new ArrayList<Integer>();
@@ -127,11 +155,17 @@ public class RecursionAndDynamicProgramming {
 //		for(int i: path) {
 //			System.out.print(i + " ");
 //		}
-		int[] ar = {10,10,10,10,10,10,10,10,10,10};
-		if(!sorted(ar)) {
-			System.out.println("Error. Unsorted Array."); 
-			return;
-		} 
-		magicIndex(ar, 0, 9);
+//		int[] ar = {10,10,10,10,10,10,10,10,10,10};
+//		if(!sorted(ar)) {
+//			System.out.println("Error. Unsorted Array."); 
+//			return;
+//		} 
+//		magicIndex(ar, 0, 9);
+		Set<Integer> set = new HashSet<Integer>();
+		for(int i = 1; i <= 6; i++) {
+			set.add(i);
+		}
+		ArrayList<Set<Integer>> pwSets = new ArrayList<Set<Integer>>();
+		System.out.println(powerSet(set, pwSets));
 	}
 }
