@@ -200,6 +200,48 @@ public class RecursionAndDynamicProgramming {
 		str = String.join("", list);
 		return str;
 	}
+	//Solution to 8.8 Permutations with Dups. String str may contain duplicate characters, but 
+	//the final list of permutations may not contain duplicate strings.
+	public static void findPermutationsDups(String str){
+		ArrayList<String> permutations = new ArrayList<String>();
+		String fixed = str;
+		String unfixed = "";
+		int lastFixed = fixed.length()-1;
+		permutations = permutationsDups(fixed, unfixed, permutations, lastFixed);
+		System.out.print("List of permutations of string " + str + ": ");
+		System.out.println(permutations);
+		System.out.println("Number of permutations of string " + str + ": " + permutations.size());
+	}
+	public static ArrayList<String> permutationsDups(String fixed, String unfixed, ArrayList<String> permutations, int lastFixed){
+		if(unfixed.length() == 0) {
+			permutations.add(fixed + unfixed);
+		}
+		if(fixed.length() == 1) {
+			return permutations;
+		}
+		unfixed = (fixed.charAt(lastFixed) + unfixed);
+		fixed = fixed.substring(0, lastFixed);
+		lastFixed--;
+		ArrayList<String> newPerms = new ArrayList<String>();
+		for(String perm: permutations) {
+			int i = lastFixed + 1;
+			while(i < perm.length()) {
+				String temp = swap(perm, lastFixed, i);
+				if(newPerms.contains(temp) || permutations.contains(temp)) {
+					i++;
+					continue;
+				}
+				newPerms.add(temp);
+				i++;
+			}
+		}
+		for(String perm: newPerms) {
+			permutations.add(perm);
+		}
+		newPerms.clear();
+		permutationsDups(fixed, unfixed, permutations, lastFixed);
+		return permutations;
+	}
 	public static void main(String[] args) {
 //		ArrayList<ArrayList<Integer>> paths = new ArrayList<ArrayList<Integer>>();
 //		ArrayList<Integer> path = new ArrayList<Integer>();
@@ -241,7 +283,9 @@ public class RecursionAndDynamicProgramming {
 //		while(!tower3.isEmpty()) {
 //			System.out.print(tower3.pop() + ", ");
 //		}
-		String str = "abcd";
+		String str = "abcddddaa";
 		findPermutations(str);
+		String str2 = "abcddddaa";
+		findPermutationsDups(str2);
 	}
 }
