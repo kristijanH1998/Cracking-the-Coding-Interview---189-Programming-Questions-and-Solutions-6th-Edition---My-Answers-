@@ -3,6 +3,8 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Collections;
+import java.util.Stack;
+import java.util.Arrays;
 
 public class RecursionAndDynamicProgramming {
 	public static int sum (ArrayList<Integer> list) {
@@ -142,6 +144,62 @@ public class RecursionAndDynamicProgramming {
 		}
 		return powerSets;
 	}
+	//problem 8.6 Towers of Hanoi
+	public static Stack<Integer> hanoi(int n, Stack<Integer> current, Stack<Integer> aux, Stack<Integer> goal) {
+		if(n == 1) {
+			goal.push(current.pop());
+			return goal;
+		}
+		hanoi(n-1,current, goal, aux);
+		goal.push(current.pop());
+		hanoi(n-1,aux, current, goal);
+		return goal;	
+	}
+	//problem 8.7 Permutations without Dups. Prints all possible permutations of a string str.
+	public static void findPermutations(String str){
+		ArrayList<String> permutations = new ArrayList<String>();
+		String fixed = str;
+		String unfixed = "";
+		int lastFixed = fixed.length()-1;
+		permutations = permutations(fixed, unfixed, permutations, lastFixed);
+		System.out.print("List of permutations of string " + str + ": ");
+		System.out.println(permutations);
+		System.out.println("Number of permutations of string " + str + ": " + permutations.size());
+	}
+	public static ArrayList<String> permutations(String fixed, String unfixed, ArrayList<String> permutations, int lastFixed){
+		if(unfixed.length() == 0) {
+			permutations.add(fixed + unfixed);
+		}
+		if(fixed.length() == 1) {
+			return permutations;
+		}
+		unfixed = (fixed.charAt(lastFixed) + unfixed);
+		fixed = fixed.substring(0, lastFixed);
+		lastFixed--;
+		ArrayList<String> newPerms = new ArrayList<String>();
+		for(String perm: permutations) {
+			int i = lastFixed + 1;
+			while(i < perm.length()) {
+				String temp = swap(perm, lastFixed, i);
+				newPerms.add(temp);
+				i++;
+			}
+		}
+		for(String perm: newPerms) {
+			permutations.add(perm);
+		}
+		newPerms.clear();
+		permutations(fixed, unfixed, permutations, lastFixed);
+		return permutations;
+	}
+	public static String swap (String str, int i, int j){
+		ArrayList<String> list = new ArrayList<>(Arrays.asList(str.split("")));
+		String temp = list.get(i);
+		list.set(i, list.get(j));
+		list.set(j, temp);
+		str = String.join("", list);
+		return str;
+	}
 	public static void main(String[] args) {
 //		ArrayList<ArrayList<Integer>> paths = new ArrayList<ArrayList<Integer>>();
 //		ArrayList<Integer> path = new ArrayList<Integer>();
@@ -161,11 +219,29 @@ public class RecursionAndDynamicProgramming {
 //			return;
 //		} 
 //		magicIndex(ar, 0, 9);
-		Set<Integer> set = new HashSet<Integer>();
-		for(int i = 1; i <= 6; i++) {
-			set.add(i);
-		}
-		ArrayList<Set<Integer>> pwSets = new ArrayList<Set<Integer>>();
-		System.out.println(powerSet(set, pwSets));
+//		Set<Integer> set = new HashSet<Integer>();
+//		for(int i = 1; i <= 6; i++) {
+//			set.add(i);
+//		}
+//		ArrayList<Set<Integer>> pwSets = new ArrayList<Set<Integer>>();
+//		System.out.println(powerSet(set, pwSets));
+//		Stack<Integer> tower1 = new Stack<Integer>();
+//		Stack<Integer> tower2 = new Stack<Integer>();
+//		Stack<Integer> tower3 = new Stack<Integer>();
+//		tower1.push(5);
+//		tower1.push(4);
+//		tower1.push(3);
+//		tower1.push(2);
+//		tower1.push(1);
+//		int numDisks = 5;
+//		hanoi(numDisks, tower1, tower2, tower3);
+//		System.out.println("Tower 1 is empty: " + tower1.isEmpty());
+//		System.out.println("Tower 2 is empty: " + tower2.isEmpty());
+//		System.out.print("tower 3 contents: ");
+//		while(!tower3.isEmpty()) {
+//			System.out.print(tower3.pop() + ", ");
+//		}
+		String str = "abcd";
+		findPermutations(str);
 	}
 }
