@@ -242,6 +242,33 @@ public class RecursionAndDynamicProgramming {
 		permutationsDups(fixed, unfixed, permutations, lastFixed);
 		return permutations;
 	}
+	public static ArrayList<String> parens(int n) {
+		ArrayList<String> list = new ArrayList<String>();
+		String comb = "";
+		parensCombs(true, false, n, 1, 0, list, comb);
+		return list;
+	}
+	public static ArrayList<String> parensCombs(boolean open, boolean closed, int n, int countOpen, int countClosed, 
+			ArrayList<String> list, String comb){
+		if(open) {
+			comb += "(";
+		} else {
+			comb += ")";
+		}
+		if((countClosed == countOpen) && ((countOpen + countClosed) == n * 2)) {
+			list.add(comb);
+			comb = "";
+			return list;
+		}
+		
+		if(countOpen < n) {
+			parensCombs(true, false, n, countOpen + 1, countClosed, list, comb);
+		}
+		if(countClosed < countOpen) {
+			parensCombs(false, true, n, countOpen, countClosed + 1, list, comb);
+		}
+		return list;
+	}
 	public static void main(String[] args) {
 //		ArrayList<ArrayList<Integer>> paths = new ArrayList<ArrayList<Integer>>();
 //		ArrayList<Integer> path = new ArrayList<Integer>();
@@ -283,9 +310,13 @@ public class RecursionAndDynamicProgramming {
 //		while(!tower3.isEmpty()) {
 //			System.out.print(tower3.pop() + ", ");
 //		}
-		String str = "abcddddaa";
-		findPermutations(str);
-		String str2 = "abcddddaa";
-		findPermutationsDups(str2);
+//		String str = "abcdefgh";
+//		findPermutations(str);
+//		String str2 = "crocodil";
+//		findPermutationsDups(str2);
+		ArrayList<String> list = new ArrayList<String>();
+		list = parens(4);
+		System.out.println(list);
+		System.out.println("List size: " + list.size());
 	}
 }
