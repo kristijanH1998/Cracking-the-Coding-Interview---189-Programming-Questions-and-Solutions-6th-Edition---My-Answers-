@@ -4,6 +4,9 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.Collections;
 import java.util.Stack;
+
+import recursionAndDynamicProgramming.RecursionAndDynamicProgramming.Coin;
+
 import java.util.Arrays;
 
 public class RecursionAndDynamicProgramming {
@@ -269,6 +272,50 @@ public class RecursionAndDynamicProgramming {
 		}
 		return list;
 	}
+	
+	public enum Coin{
+		QUARTER(25),
+		DIME(10), 
+		NICKEL(5), 
+		PENNY(1),
+		ZERO(0);
+		private final int centValue;
+		Coin(int centValue){
+			this.centValue = centValue;
+		}
+		public int getValue() {
+			return this.centValue; 
+		}
+	}
+	public static ArrayList<ArrayList<Coin>> coins(int amount){
+		ArrayList<ArrayList<Coin>> list = new ArrayList<ArrayList<Coin>>();
+		ArrayList<Coin> representation = new ArrayList<Coin>();
+		return coinsRepresent(list, representation, amount, 0, Coin.ZERO);
+	}
+	public static ArrayList<ArrayList<Coin>> coinsRepresent(ArrayList<ArrayList<Coin>> list, 
+			ArrayList<Coin> representation, int amount, int currentTotal, Coin coin){
+		if((currentTotal <= amount) && (coin.getValue() != 0)) {
+			representation.add(coin);
+		} else if (currentTotal > amount){ //Error: Amount of money exceeded, return
+			return list;
+		}
+		if(currentTotal == amount) {
+			list.add(representation);
+		//	representation.clear();
+			return list;
+		}
+		ArrayList<Coin> copyList =  (ArrayList<Coin>) representation.clone();  
+		
+		coinsRepresent(list, copyList, amount, currentTotal + Coin.PENNY.getValue(), Coin.PENNY);
+		copyList = representation;
+		coinsRepresent(list, copyList, amount, currentTotal + Coin.NICKEL.getValue(), Coin.NICKEL);
+		copyList = representation;
+		coinsRepresent(list, copyList, amount, currentTotal + Coin.DIME.getValue(), Coin.DIME);
+		copyList = representation;
+		coinsRepresent(list, copyList, amount, currentTotal + Coin.QUARTER.getValue(), Coin.QUARTER);
+		copyList = representation;
+		return list;
+	}
 	public static void main(String[] args) {
 //		ArrayList<ArrayList<Integer>> paths = new ArrayList<ArrayList<Integer>>();
 //		ArrayList<Integer> path = new ArrayList<Integer>();
@@ -314,9 +361,12 @@ public class RecursionAndDynamicProgramming {
 //		findPermutations(str);
 //		String str2 = "crocodil";
 //		findPermutationsDups(str2);
-		ArrayList<String> list = new ArrayList<String>();
-		list = parens(4);
-		System.out.println(list);
-		System.out.println("List size: " + list.size());
+		
+//		ArrayList<String> list = new ArrayList<String>();
+//		list = parens(4);
+//		System.out.println(list);
+//		System.out.println("List size: " + list.size());
+		
+		System.out.println(coins(8));
 	}
 }
