@@ -287,6 +287,17 @@ public class RecursionAndDynamicProgramming {
 			return this.centValue; 
 		}
 	}
+	public static boolean alreadyInList(ArrayList<Coin> representation, ArrayList<ArrayList<Coin>> list) {
+		for(ArrayList<Coin> comb: list) {
+			if((Collections.frequency(comb, Coin.PENNY) == Collections.frequency(representation, Coin.PENNY)) &&
+					Collections.frequency(comb, Coin.NICKEL) == Collections.frequency(representation, Coin.NICKEL) &&
+					Collections.frequency(comb, Coin.DIME) == Collections.frequency(representation, Coin.DIME) &&
+					Collections.frequency(comb, Coin.QUARTER) == Collections.frequency(representation, Coin.QUARTER)) {
+				return true;
+			}
+		}
+		return false;
+	}
 	public static ArrayList<ArrayList<Coin>> coins(int amount){
 		ArrayList<ArrayList<Coin>> list = new ArrayList<ArrayList<Coin>>();
 		ArrayList<Coin> representation = new ArrayList<Coin>();
@@ -294,26 +305,25 @@ public class RecursionAndDynamicProgramming {
 	}
 	public static ArrayList<ArrayList<Coin>> coinsRepresent(ArrayList<ArrayList<Coin>> list, 
 			ArrayList<Coin> representation, int amount, int currentTotal, Coin coin){
-		if((currentTotal <= amount) && (coin.getValue() != 0)) {
+		if(coin.getValue() != 0) {
 			representation.add(coin);
-		} else if (currentTotal > amount){ //Error: Amount of money exceeded, return
+		} 
+		if (currentTotal > amount){ //Error: Amount of money exceeded, return
+			representation.remove(coin);
 			return list;
 		}
-		if(currentTotal == amount) {
+		if((currentTotal == amount) && !alreadyInList(representation, list)) {
 			list.add(representation);
-		//	representation.clear();
 			return list;
 		}
-		ArrayList<Coin> copyList =  (ArrayList<Coin>) representation.clone();  
-		
-		coinsRepresent(list, copyList, amount, currentTotal + Coin.PENNY.getValue(), Coin.PENNY);
-		copyList = representation;
-		coinsRepresent(list, copyList, amount, currentTotal + Coin.NICKEL.getValue(), Coin.NICKEL);
-		copyList = representation;
-		coinsRepresent(list, copyList, amount, currentTotal + Coin.DIME.getValue(), Coin.DIME);
-		copyList = representation;
-		coinsRepresent(list, copyList, amount, currentTotal + Coin.QUARTER.getValue(), Coin.QUARTER);
-		copyList = representation;
+		coinsRepresent(list, (ArrayList<Coin>) representation.clone(), amount, 
+				currentTotal + Coin.PENNY.getValue(), Coin.PENNY);
+		coinsRepresent(list, (ArrayList<Coin>) representation.clone(), amount, 
+				currentTotal + Coin.NICKEL.getValue(), Coin.NICKEL);
+		coinsRepresent(list, (ArrayList<Coin>) representation.clone(), amount, 
+				currentTotal + Coin.DIME.getValue(), Coin.DIME);
+		coinsRepresent(list, (ArrayList<Coin>) representation.clone(), amount, 
+				currentTotal + Coin.QUARTER.getValue(), Coin.QUARTER);
 		return list;
 	}
 	public static void main(String[] args) {
