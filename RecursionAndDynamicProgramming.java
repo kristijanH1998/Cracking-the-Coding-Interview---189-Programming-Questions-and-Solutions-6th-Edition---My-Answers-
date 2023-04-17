@@ -4,6 +4,8 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.Collections;
 import java.util.Stack;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import recursionAndDynamicProgramming.RecursionAndDynamicProgramming.Coin;
 
@@ -326,6 +328,303 @@ public class RecursionAndDynamicProgramming {
 				currentTotal + Coin.QUARTER.getValue(), Coin.QUARTER);
 		return list;
 	}
+	//alreadyMapped, eightQueens, and eightQueensCombs are parts of the solution to 8.12 Eight Queens problem
+//	public static boolean alreadyMapped(String str, HashMap<String,char[][]> combs) {
+//		for(String s: combs.keySet()) {
+//			if(s.equals(str)) {
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
+	public static boolean diagonalsBlocked(char[][] board, int row, int col) {
+		int r = row;
+		int c = col;
+		while(r-1 >= 0 && c-1 >= 0) {
+			r -= 1;
+			c -= 1;
+			if(board[r][c] == 'Q') {
+				return true;
+			}
+		}
+		r = row;
+		c = col;
+		while(r-1 >= 0 && c+1 < board[0].length) {
+			r -= 1;
+			c += 1;
+			if(board[r][c] == 'Q') {
+				return true;
+			}
+		}
+		r = row;
+		c = col;
+		while(r+1 < board.length && c-1 >= 0) {
+			r += 1;
+			c -= 1;
+			if(board[r][c] == 'Q') {
+				return true;
+			}
+		}
+		r = row;
+		c = col;
+		while(r+1 < board.length && c+1 < board[0].length) {
+			r += 1;
+			c += 1;
+			if(board[r][c] == 'Q') {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+//	public static HashMap<String,char[][]> eightQueens(){
+//		HashMap<String,char[][]> combs = new HashMap<String,char[][]>();
+//		int queensLeft = 8;
+//		int row = 0;
+//		int col = 0;
+//		char[][] board = new char[8][8];
+//		for(int i = 0; i < board.length; i++) {
+//			for(int j = 0; j < board[0].length; j++) {
+//				board[i][j] = '-';
+//			}
+//		}
+//		String coordinates = "";
+//		ArrayList<Integer> validColumns = new ArrayList<Integer>();
+//		for(int i = 0; i < board.length; i++) {
+//			validColumns.add(i);
+//		}
+//		eightQueensCombs(row, col, validColumns, coordinates, queensLeft, board, combs);
+//		return(combs);
+//	}
+	
+//	public static void eightQueensHelper() {
+//		HashMap<String,char[][]> combs = new HashMap<String,char[][]>();
+//		for(int r = 0; r <= 7; r++) {
+//			for(int c = 0; c <= 7; c++) {
+//				eightQueens(r,c,combs);
+//			}
+//		}
+//		
+//	}
+	
+//	public static boolean eightQueensCombs(int row, int col, ArrayList<Integer> validColumns, 
+//			String coordinates, int queensRemaining, char[][] board, HashMap<String,char[][]> combs) {	
+//		ArrayList<Integer> colsTried = new ArrayList<Integer>();
+//		if(col < board[0].length && !diagonalsBlocked(board,row,col)) {
+//			board[row][col] = 'Q';
+//			coordinates += (Integer.toString(row) + Integer.toString(col));
+//			queensRemaining--;
+//			validColumns.remove(validColumns.indexOf(col));
+//			colsTried.add(col);
+//		} else {
+//			return false;
+//		}
+//		if(row == (board.length - 1) && !alreadyMapped(coordinates, combs) && queensRemaining == 0) {
+//			printBoard(board);
+//			combs.put(coordinates, board);
+//			return true;
+//		} 
+//		char[][] boardCopy = new char[8][8];
+//		boardCopy = board;
+//		if(row+1 < board.length) {
+//			int i = 0;
+//			int c = validColumns.get(i);
+//			boolean triedNextRow = eightQueensCombs(row+1, c, (ArrayList<Integer>) validColumns.clone(), coordinates, 
+//					queensRemaining, boardCopy, combs);
+//			while(!triedNextRow && i < validColumns.size()) {
+//				i++;
+//				c = validColumns.get(i);
+//				triedNextRow = eightQueensCombs(row+1, c, (ArrayList<Integer>) validColumns.clone(), coordinates, 
+//						queensRemaining, boardCopy, combs);
+//				if(i == validColumns.size() - 1 && !triedNextRow) {
+//					board[row][col] = '-';
+//					coordinates = coordinates.substring(0, coordinates.length() - 2);
+//					validColumns.add(col);
+//					col = 0;
+//					while(!colsTried.contains(col) && validColumns.contains(col) && col < board[0].length) {
+//						col++;
+//					}
+//					board[row][col] = 'Q';
+//					coordinates += (Integer.toString(row) + Integer.toString(col));
+//					validColumns.remove(validColumns.indexOf(col));
+//					colsTried.add(col);
+//					i = 0;
+//					if(colsTried.size() == board[0].length) {
+//						return false;
+//					} 
+//					continue;
+//				}
+//			}
+//		} 
+//		return true;
+//	}
+	
+	public static void eightQueensNewHelper() {
+		char[][] board = new char[8][8];
+		int row = 0;
+		int col = 0;
+		int combsFound = 1;
+		for(int i = 0; i < board.length; i++) {
+			for(int j = 0; j < board[0].length; j++) {
+				board[i][j] = '-';
+			}
+		}
+		for(int i = 0; i < board.length; i++) {
+			eightQueensNew(board, row, i);
+		}
+	}
+	public static int combsFound = 1;
+	public static void eightQueensNew(char[][] board, int row, int col) {
+		
+		board[row][col] = 'Q';
+		if(row == board.length - 1){// && ) {
+//			System.out.println(combsFound + ": ");
+			//printBoard(board);
+//			combsFound++;
+
+			if(checkRows(board) && checkCols(board) && validDiagonals(board)) {
+				System.out.println(combsFound + ": ");
+//				printBoard(board);
+				combsFound++;
+			}
+			return;
+		}
+		for(int i = 0; i < board[0].length; i++) {
+			eightQueensNew(matrixCopy(board), row + 1, i);
+		}
+		return;
+	}
+	
+	public static char[][] matrixCopy(char[][] board){
+		char[][] boardCopy = new char[8][8];
+		for(int i = 0; i < board.length; i++) {
+			for(int j = 0; j < board[0].length; j++) {
+				boardCopy[i][j] = board[i][j];
+			}
+		}
+		return boardCopy;
+	}
+	
+	public static boolean checkRows(char[][] board) {
+		int queensCount;
+		for(int i = 0; i < board.length; i++) {
+			queensCount = 0;
+			for(int j = 0; j < board[0].length; j++) {
+				if(board[i][j] == 'Q') {
+					queensCount++;
+				}
+				if (queensCount > 1){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	public static boolean checkCols(char[][] board) {
+		int queensCount;
+		for(int i = 0; i < board[0].length; i++) {
+			queensCount = 0;
+			for(int j = 0; j < board.length; j++) {
+				if(board[j][i] == 'Q') {
+					queensCount++;
+				}
+				if (queensCount > 1){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	public static boolean validDiagonals(char[][] board) {
+		int queensCount = 0;
+		int r;
+		int c;
+		for(int i = 0; i < board.length; i++) {
+			c = 0;
+			r = i;
+			if(board[r][c] == 'Q') {
+				queensCount++;
+			}
+			while(r+1 < board.length && c+1 < board[0].length) {
+				r += 1;
+				c += 1;
+				if(board[r][c] == 'Q') {
+					queensCount++;
+				}
+			}
+			if(queensCount > 1) {
+				return false;
+			}
+			queensCount = 0;
+		}
+		for(int i = 0; i < board[0].length; i++) {
+			c = i;
+			r = 0;
+			if(board[r][c] == 'Q') {
+				queensCount++;
+			}
+			while(r+1 < board.length && c+1 < board[0].length) {
+				r += 1;
+				c += 1;
+				if(board[r][c] == 'Q') {
+					queensCount++;
+				}
+			}
+			if(queensCount > 1) {
+				return false;
+			}
+			queensCount = 0;
+		}
+		for(int i = 0; i < board.length; i++) {
+			c = i;
+			r = 0;
+			if(board[r][c] == 'Q') {
+				queensCount++;
+			}
+			while(r+1 < board.length && c-1 >= 0) {
+				r += 1;
+				c -= 1;
+				if(board[r][c] == 'Q') {
+					queensCount++;
+				}
+			}
+			if(queensCount > 1) {
+				return false;
+			}
+			queensCount = 0;
+		}	
+		for(int i = 0; i < board.length; i++) {
+			c = board[0].length - 1;
+			r = i;
+			if(board[r][c] == 'Q') {
+				queensCount++;
+			}
+			while(r+1 < board.length && c-1 >= 0) {
+				r += 1;
+				c -= 1;
+				if(board[r][c] == 'Q') {
+					queensCount++;
+				}
+			}
+			if(queensCount > 1) {
+				return false;
+			}
+			queensCount = 0;
+		}
+		return true;
+	}
+	
+	public static void printBoard(char[][] board) {
+		for(int i = 0; i < board.length; i++) {
+			for(int j = 0; j < board[0].length; j++) {
+				System.out.print(board[i][j] + "	");
+			}
+			System.out.println();
+		}
+	}
+	
 	public static void main(String[] args) {
 //		ArrayList<ArrayList<Integer>> paths = new ArrayList<ArrayList<Integer>>();
 //		ArrayList<Integer> path = new ArrayList<Integer>();
@@ -377,6 +676,9 @@ public class RecursionAndDynamicProgramming {
 //		System.out.println(list);
 //		System.out.println("List size: " + list.size());
 		
-		System.out.println(coins(8));
+//		System.out.println(coins(8));
+		
+//		eightQueens();
+		eightQueensNewHelper();
 	}
 }
