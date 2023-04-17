@@ -337,45 +337,45 @@ public class RecursionAndDynamicProgramming {
 //		}
 //		return false;
 //	}
-	public static boolean diagonalsBlocked(char[][] board, int row, int col) {
-		int r = row;
-		int c = col;
-		while(r-1 >= 0 && c-1 >= 0) {
-			r -= 1;
-			c -= 1;
-			if(board[r][c] == 'Q') {
-				return true;
-			}
-		}
-		r = row;
-		c = col;
-		while(r-1 >= 0 && c+1 < board[0].length) {
-			r -= 1;
-			c += 1;
-			if(board[r][c] == 'Q') {
-				return true;
-			}
-		}
-		r = row;
-		c = col;
-		while(r+1 < board.length && c-1 >= 0) {
-			r += 1;
-			c -= 1;
-			if(board[r][c] == 'Q') {
-				return true;
-			}
-		}
-		r = row;
-		c = col;
-		while(r+1 < board.length && c+1 < board[0].length) {
-			r += 1;
-			c += 1;
-			if(board[r][c] == 'Q') {
-				return true;
-			}
-		}
-		return false;
-	}
+//	public static boolean diagonalsBlocked(char[][] board, int row, int col) {
+//		int r = row;
+//		int c = col;
+//		while(r-1 >= 0 && c-1 >= 0) {
+//			r -= 1;
+//			c -= 1;
+//			if(board[r][c] == 'Q') {
+//				return true;
+//			}
+//		}
+//		r = row;
+//		c = col;
+//		while(r-1 >= 0 && c+1 < board[0].length) {
+//			r -= 1;
+//			c += 1;
+//			if(board[r][c] == 'Q') {
+//				return true;
+//			}
+//		}
+//		r = row;
+//		c = col;
+//		while(r+1 < board.length && c-1 >= 0) {
+//			r += 1;
+//			c -= 1;
+//			if(board[r][c] == 'Q') {
+//				return true;
+//			}
+//		}
+//		r = row;
+//		c = col;
+//		while(r+1 < board.length && c+1 < board[0].length) {
+//			r += 1;
+//			c += 1;
+//			if(board[r][c] == 'Q') {
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
 	
 //	public static HashMap<String,char[][]> eightQueens(){
 //		HashMap<String,char[][]> combs = new HashMap<String,char[][]>();
@@ -459,33 +459,33 @@ public class RecursionAndDynamicProgramming {
 //		return true;
 //	}
 	
+	//New attempt at Eight Queens Problem (8.12), 
 	public static void eightQueensNewHelper() {
 		char[][] board = new char[8][8];
 		int row = 0;
 		int col = 0;
-		int combsFound = 1;
-		for(int i = 0; i < board.length; i++) {
-			for(int j = 0; j < board[0].length; j++) {
-				board[i][j] = '-';
-			}
-		}
 		for(int i = 0; i < board.length; i++) {
 			eightQueensNew(board, row, i);
+			for(int k = 0; k < board.length; k++) {
+				for(int j = 0; j < board[0].length; j++) {
+					board[k][j] = '-';
+				}
+			}
 		}
+		System.out.println(combsFound);
+		System.out.print(validsFound);
 	}
-	public static int combsFound = 1;
+	public static int combsFound = 0;
+	public static int validsFound = 0;
 	public static void eightQueensNew(char[][] board, int row, int col) {
-		
 		board[row][col] = 'Q';
-		if(row == board.length - 1){// && ) {
-//			System.out.println(combsFound + ": ");
-			//printBoard(board);
-//			combsFound++;
-
-			if(checkRows(board) && checkCols(board) && validDiagonals(board)) {
-				System.out.println(combsFound + ": ");
-//				printBoard(board);
-				combsFound++;
+		if(row == board.length - 1){
+			combsFound++;
+			if(checkCols(board) && validDiagonals(board)) {
+				System.out.println("Solution " + (validsFound - 1));
+				printBoard(board);
+				System.out.println();
+				validsFound++;
 			}
 			return;
 		}
@@ -494,7 +494,6 @@ public class RecursionAndDynamicProgramming {
 		}
 		return;
 	}
-	
 	public static char[][] matrixCopy(char[][] board){
 		char[][] boardCopy = new char[8][8];
 		for(int i = 0; i < board.length; i++) {
@@ -504,23 +503,6 @@ public class RecursionAndDynamicProgramming {
 		}
 		return boardCopy;
 	}
-	
-	public static boolean checkRows(char[][] board) {
-		int queensCount;
-		for(int i = 0; i < board.length; i++) {
-			queensCount = 0;
-			for(int j = 0; j < board[0].length; j++) {
-				if(board[i][j] == 'Q') {
-					queensCount++;
-				}
-				if (queensCount > 1){
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-	
 	public static boolean checkCols(char[][] board) {
 		int queensCount;
 		for(int i = 0; i < board[0].length; i++) {
@@ -536,7 +518,6 @@ public class RecursionAndDynamicProgramming {
 		}
 		return true;
 	}
-	
 	public static boolean validDiagonals(char[][] board) {
 		int queensCount = 0;
 		int r;
@@ -544,69 +525,60 @@ public class RecursionAndDynamicProgramming {
 		for(int i = 0; i < board.length; i++) {
 			c = 0;
 			r = i;
-			if(board[r][c] == 'Q') {
-				queensCount++;
-			}
-			while(r+1 < board.length && c+1 < board[0].length) {
-				r += 1;
-				c += 1;
+			while(r < board.length && c < board[0].length) {
 				if(board[r][c] == 'Q') {
 					queensCount++;
 				}
+				r += 1;
+				c += 1;
 			}
 			if(queensCount > 1) {
 				return false;
 			}
 			queensCount = 0;
 		}
+		queensCount = 0;
 		for(int i = 0; i < board[0].length; i++) {
 			c = i;
 			r = 0;
-			if(board[r][c] == 'Q') {
-				queensCount++;
-			}
-			while(r+1 < board.length && c+1 < board[0].length) {
-				r += 1;
-				c += 1;
+			while(r < board.length && c < board[0].length) {
 				if(board[r][c] == 'Q') {
 					queensCount++;
 				}
+				r += 1;
+				c += 1;
 			}
 			if(queensCount > 1) {
 				return false;
 			}
 			queensCount = 0;
 		}
-		for(int i = 0; i < board.length; i++) {
+		queensCount = 0;
+		for(int i = board.length - 1; i >= 0; i--) {
 			c = i;
 			r = 0;
-			if(board[r][c] == 'Q') {
-				queensCount++;
-			}
-			while(r+1 < board.length && c-1 >= 0) {
-				r += 1;
-				c -= 1;
+			while(r < board.length && c >= 0) {
 				if(board[r][c] == 'Q') {
 					queensCount++;
 				}
+				r += 1;
+				c -= 1;
 			}
 			if(queensCount > 1) {
 				return false;
 			}
 			queensCount = 0;
-		}	
+		}
+		queensCount = 0;
 		for(int i = 0; i < board.length; i++) {
 			c = board[0].length - 1;
 			r = i;
-			if(board[r][c] == 'Q') {
-				queensCount++;
-			}
-			while(r+1 < board.length && c-1 >= 0) {
-				r += 1;
-				c -= 1;
+			while(r < board.length && c >= 0) {
 				if(board[r][c] == 'Q') {
 					queensCount++;
 				}
+				r += 1;
+				c -= 1;
 			}
 			if(queensCount > 1) {
 				return false;
@@ -615,16 +587,14 @@ public class RecursionAndDynamicProgramming {
 		}
 		return true;
 	}
-	
 	public static void printBoard(char[][] board) {
 		for(int i = 0; i < board.length; i++) {
 			for(int j = 0; j < board[0].length; j++) {
-				System.out.print(board[i][j] + "	");
+				System.out.print(board[i][j] + " ");
 			}
 			System.out.println();
 		}
 	}
-	
 	public static void main(String[] args) {
 //		ArrayList<ArrayList<Integer>> paths = new ArrayList<ArrayList<Integer>>();
 //		ArrayList<Integer> path = new ArrayList<Integer>();
