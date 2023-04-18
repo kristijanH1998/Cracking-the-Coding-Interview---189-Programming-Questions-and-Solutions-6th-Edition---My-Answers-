@@ -11,6 +11,31 @@ import recursionAndDynamicProgramming.RecursionAndDynamicProgramming.Coin;
 
 import java.util.Arrays;
 
+class Box{
+	String name;
+	int height;
+	int width;
+	int depth;
+	public Box(int h, int w, int d, String name) {
+		this.name = name;
+		this.height = h;
+		this.width = w;
+		this.depth = d;
+	}
+	public int getDepth() {
+		return this.depth;
+	}
+	public int getHeight() {
+		return this.height;
+	}
+	public int getWidth() {
+		return this.width;
+	}
+	public String getName() {
+		return this.name;
+	}
+}
+
 public class RecursionAndDynamicProgramming {
 	public static int sum (ArrayList<Integer> list) {
 		int sum = 0;
@@ -595,6 +620,42 @@ public class RecursionAndDynamicProgramming {
 			System.out.println();
 		}
 	}
+	
+	public static HashMap<Integer, ArrayList<Box>> stackOfBoxes(ArrayList<Box> boxes, HashMap<Integer, ArrayList<Box>>
+		stackSizes, Box currentBox) {
+		ArrayList<Box> stack = new ArrayList<Box>();
+		boolean fits = true;
+		stack.add(currentBox);
+		outerLoop:
+		for(Box b: boxes) {
+			if(b == currentBox) {
+				continue outerLoop;
+			}
+			innerLoop:
+			for(Box stackedBox: stack) {
+				if(!((b.getHeight() < stackedBox.getHeight() && b.getWidth() < stackedBox.getWidth() && 
+						b.getDepth() < stackedBox.getDepth()) || 
+						(b.getHeight() > stackedBox.getHeight() && b.getWidth() > stackedBox.getWidth() && 
+						b.getDepth() > stackedBox.getDepth()))) {
+					fits = false;
+					break innerLoop;
+				} 
+			}
+			if(fits) {
+				stack.add(b);
+			} else {
+				fits = true;
+				continue outerLoop;
+			}
+		}
+		for(Box b: stack) {
+			System.out.println(b.getName());
+		}
+		stackSizes.put(stack.size(), stack);
+		stackOfBoxes(boxes, stackSizes, boxes.get(boxes.indexOf(currentBox) + 1));
+		return stackSizes;
+	}
+	
 	public static void main(String[] args) {
 //		ArrayList<ArrayList<Integer>> paths = new ArrayList<ArrayList<Integer>>();
 //		ArrayList<Integer> path = new ArrayList<Integer>();
@@ -648,7 +709,23 @@ public class RecursionAndDynamicProgramming {
 		
 //		System.out.println(coins(8));
 		
-//		eightQueens();
-		eightQueensNewHelper();
+//		eightQueensNewHelper();
+		Box b1 = new Box(4, 5, 4, "b1");
+		Box b2 = new Box(3, 3, 3, "b2");
+		Box b3 = new Box(1, 2, 1, "b3");
+		Box b4 = new Box(7, 8, 8, "b4");
+		Box b5 = new Box(11, 10, 14, "b5");
+		Box b6 = new Box(4, 15, 32, "b6");
+		Box b7 = new Box(11, 45, 23, "b7");
+		ArrayList<Box> boxes = new ArrayList<Box>();
+		boxes.add(b1);
+		boxes.add(b2);
+		boxes.add(b3);
+		boxes.add(b4);
+		boxes.add(b5);
+		boxes.add(b6);
+		boxes.add(b7);
+		HashMap<Integer, ArrayList<Box>> stackSizes = new HashMap<Integer, ArrayList<Box>>();
+		stackOfBoxes(boxes, stackSizes, b1);
 	}
 }
