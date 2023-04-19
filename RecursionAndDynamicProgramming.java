@@ -620,9 +620,36 @@ public class RecursionAndDynamicProgramming {
 			System.out.println();
 		}
 	}
-	
+	//8.13 Stack of Boxes:
+	public static void stackOfBoxesHelper() {
+		Box b1 = new Box(14, 14, 14, "b1");
+		Box b2 = new Box(15, 15, 15, "b2");
+		Box b3 = new Box(16, 16, 16, "b3");
+		Box b4 = new Box(17, 17, 17, "b4");
+		Box b5 = new Box(18, 18, 18, "b5");
+		Box b6 = new Box(4, 15, 32, "b6");
+		Box b7 = new Box(11, 45, 23, "b7");
+		Box b8 = new Box(33, 1, 1, "b7");
+		Box b9 = new Box(34, 2, 2, "b7");
+		Box b10 = new Box(35, 3, 3, "b7");
+		ArrayList<Box> boxes = new ArrayList<Box>();
+		boxes.add(b1);
+		boxes.add(b2);
+		boxes.add(b3);
+		boxes.add(b4);
+		boxes.add(b5);
+		boxes.add(b6);
+		boxes.add(b7);
+		boxes.add(b8);
+		boxes.add(b9);
+		boxes.add(b10);
+		HashMap<Integer, ArrayList<Box>> stacks = new HashMap<Integer, ArrayList<Box>>();
+		stacks = stackOfBoxes(boxes, stacks, b1);
+		System.out.println("Height of the tallest stack: " + tallestStack(stacks));
+		return;
+	}
 	public static HashMap<Integer, ArrayList<Box>> stackOfBoxes(ArrayList<Box> boxes, HashMap<Integer, ArrayList<Box>>
-		stackSizes, Box currentBox) {
+		stacks, Box currentBox) {
 		ArrayList<Box> stack = new ArrayList<Box>();
 		boolean fits = true;
 		stack.add(currentBox);
@@ -648,14 +675,25 @@ public class RecursionAndDynamicProgramming {
 				continue outerLoop;
 			}
 		}
-		for(Box b: stack) {
-			System.out.println(b.getName());
+		int stackHeight = 0;
+		for(Box boxInStack: stack) {
+			stackHeight += boxInStack.getHeight();
 		}
-		stackSizes.put(stack.size(), stack);
-		stackOfBoxes(boxes, stackSizes, boxes.get(boxes.indexOf(currentBox) + 1));
-		return stackSizes;
+		stacks.put(stackHeight, stack);
+		if((boxes.indexOf(currentBox) + 1) < boxes.size()){
+			stackOfBoxes(boxes, stacks, boxes.get(boxes.indexOf(currentBox) + 1));
+		}
+		return stacks;
 	}
-	
+	public static int tallestStack (HashMap<Integer, ArrayList<Box>> stacks) {
+		int maxHeight = 0;
+		for(int stackSize: stacks.keySet()) {
+			if(stackSize > maxHeight) {
+				maxHeight = stackSize;
+			}
+		}
+		return maxHeight;
+	}
 	public static void main(String[] args) {
 //		ArrayList<ArrayList<Integer>> paths = new ArrayList<ArrayList<Integer>>();
 //		ArrayList<Integer> path = new ArrayList<Integer>();
@@ -710,22 +748,6 @@ public class RecursionAndDynamicProgramming {
 //		System.out.println(coins(8));
 		
 //		eightQueensNewHelper();
-		Box b1 = new Box(4, 5, 4, "b1");
-		Box b2 = new Box(3, 3, 3, "b2");
-		Box b3 = new Box(1, 2, 1, "b3");
-		Box b4 = new Box(7, 8, 8, "b4");
-		Box b5 = new Box(11, 10, 14, "b5");
-		Box b6 = new Box(4, 15, 32, "b6");
-		Box b7 = new Box(11, 45, 23, "b7");
-		ArrayList<Box> boxes = new ArrayList<Box>();
-		boxes.add(b1);
-		boxes.add(b2);
-		boxes.add(b3);
-		boxes.add(b4);
-		boxes.add(b5);
-		boxes.add(b6);
-		boxes.add(b7);
-		HashMap<Integer, ArrayList<Box>> stackSizes = new HashMap<Integer, ArrayList<Box>>();
-		stackOfBoxes(boxes, stackSizes, b1);
+		stackOfBoxesHelper();
 	}
 }
