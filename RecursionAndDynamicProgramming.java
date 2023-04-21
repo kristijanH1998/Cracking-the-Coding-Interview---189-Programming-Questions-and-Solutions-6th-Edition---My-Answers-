@@ -1,4 +1,5 @@
 package recursionAndDynamicProgramming;
+import java.beans.Expression;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
@@ -6,6 +7,7 @@ import java.util.Collections;
 import java.util.Stack;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import recursionAndDynamicProgramming.RecursionAndDynamicProgramming.Coin;
 
@@ -35,6 +37,38 @@ class Box{
 		return this.name;
 	}
 }
+//class Expr{
+//	private String stringForm = "";
+//	private boolean value;
+//	public Expr(String stringForm) {
+//		this.stringForm = stringForm;
+//		switch(stringForm) {
+//			case "1|0":
+//			case "0|1":
+//			case "1|1":
+//			case "1&1":
+//			case "1^0":
+//			case "0^1":
+//				this.value = true;
+//				break;
+//			case "0|0":
+//			case "0&0":
+//			case "0&1":
+//			case "1&0":
+//			case "0^0":
+//			case "1^1":
+//				this.value = false;
+//		}
+//		this.stringForm = "(" + stringForm + ")";
+//	}
+//	public boolean getValue() {
+//		return this.value;
+//	}
+//	public void setValue(boolean value) {
+//		this.value = value; 
+//	}
+//}
+
 
 public class RecursionAndDynamicProgramming {
 	public static int sum (ArrayList<Integer> list) {
@@ -694,6 +728,70 @@ public class RecursionAndDynamicProgramming {
 		}
 		return maxHeight;
 	}
+//	8.14 Boolean Evaluation
+//	public static void booleanEvaluation(String expression, HashMap<Boolean, String> combinations) {
+//		if(expression.length() < 3) {
+//			return;		//either invalid expression length or length == 1 ('0' or '1')
+//		}
+//		String pivot = String.valueOf(expression.charAt(expression.length() / 2));
+//		String leftSide = expression.substring(0, expression.length() / 2);
+//		//Expr left = new Expr(leftSide);
+//		String rightSide = expression.substring(expression.length() / 2 + 1, expression.length());
+//		//Expr right = new Expr(rightSide);
+//		combinations(value, )
+//		
+//		int i = 1;
+//		while(leftSide.length() >= i || rightSide.length() >= i) {
+//			if(leftSide.length() >= i) {
+//				booleanEvaluation(leftSide, combinations);
+//			}
+//			if(rightSide.length() >= i) {
+//				booleanEvaluation(rightSide, combinations);
+//			}
+//			i += 2;
+//		}
+//
+//	}
+	//public static 
+	public static int evaluate(String expression) {
+		boolean value;
+		boolean tempValue;
+		String temp1 = "";
+		for(int i = 0; i < expression.length(); i++) {
+			if(expression.charAt(i) == '&') {
+		        temp1 = temp1.substring(0, temp1.length() - 1);
+		        temp1 += String.valueOf((expression.charAt(i-1) - '0') & 
+		        		(expression.charAt(i+1) - '0'));
+		        i++;
+			} else {
+				temp1 += expression.charAt(i);
+			}
+		}
+		String temp2 = "";
+		for(int i = 0; i < temp1.length(); i++) {
+			if(temp1.charAt(i) == '^') {
+		        temp2 = temp2.substring(0, temp2.length() - 1);
+		        temp2 += String.valueOf((temp1.charAt(i-1) - '0') ^ 
+		        		(temp1.charAt(i+1) - '0'));
+		        i++;
+			} else {
+				temp2 += temp1.charAt(i);
+			}
+		}
+		String temp3 = "";
+		for(int i = 0; i < temp2.length(); i++) {
+			if(temp2.charAt(i) == '|') {
+		        temp3 = temp3.substring(0, temp3.length() - 1);
+		        temp3 += String.valueOf((temp2.charAt(i-1) - '0') |
+		        		(temp2.charAt(i+1) - '0'));
+		        i++;
+			} else {
+				temp3 += temp2.charAt(i);
+			}
+		}
+		return Integer.parseInt(temp3);
+	}
+	
 	public static void main(String[] args) {
 //		ArrayList<ArrayList<Integer>> paths = new ArrayList<ArrayList<Integer>>();
 //		ArrayList<Integer> path = new ArrayList<Integer>();
@@ -748,6 +846,11 @@ public class RecursionAndDynamicProgramming {
 //		System.out.println(coins(8));
 		
 //		eightQueensNewHelper();
-		stackOfBoxesHelper();
+//		stackOfBoxesHelper();
+		
+		HashMap<Boolean, String> combinations = new HashMap<Boolean, String>();
+		//booleanEvaluation("1^0|0|1", combinations);
+		System.out.println(evaluate("0^1^1|0&1^1|1"));
+		System.out.println(0^1^1|0&1^1|1);
 	}
 }
