@@ -38,6 +38,7 @@ public class SortingAndSearching {
 		}	
 		return A;
 	}
+	//10.2 Group Anagrams
 	public static void groupAnagramsHelper() {
 		String[] ar = {"abcd", "rtou", "dcba", "qwer", "opui", "werq", "112p", "opui", "ipou", "ioup"};
 		groupAnagrams(ar);
@@ -85,8 +86,48 @@ public class SortingAndSearching {
 		}
 		return ar;
 	}
+	public static int searchRotatedHelper() {
+		int[] ar = {6,7,8,1,2,3,4,5};
+		return(searchRotated(ar, 2));
+	}
+	public static int searchRotated(int[] ar, int x) {
+		int rotpnt = 0;
+		for(int i = 0; i < ar.length - 1; i++) {
+			if(ar[i + 1] < ar[i]) {
+				rotpnt = i + 1;
+				break;
+			}
+		}
+		int low;
+		int high;
+		if(rotpnt != 0) {
+			if((x >= ar[rotpnt]) && (x < ar[ar.length - 1])) {
+				low = rotpnt;
+				high = ar.length - 1;
+			} else {
+				low = 0;
+				high = rotpnt - 1;
+			}
+		} else {
+			low = 0;
+			high = ar.length - 1;
+		}
+		int mid;
+		while(low <= high) {
+			mid = (low + high) / 2;
+			if(ar[mid] < x) {
+				low = mid + 1;
+			} else if(ar[mid] > x) {
+				high = mid - 1;
+			} else {
+				return mid;
+			}
+		}
+		return -1;
+	}
 	public static void main(String[] args) {
 	//	sortedMergeHelper();
-		groupAnagramsHelper();
+	//	groupAnagramsHelper();
+		System.out.println(searchRotatedHelper());
 	}
 }
