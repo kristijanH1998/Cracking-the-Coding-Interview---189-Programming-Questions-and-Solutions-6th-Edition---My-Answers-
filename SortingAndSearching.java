@@ -1,6 +1,25 @@
 package sortingAndSearching;
 import java.util.*;
 
+//Listy data structure used for 10.4 Sorted Search, no Size problem
+class Listy{
+	int[] array = {};
+	int lastIndex = 0;
+	int size;
+	public Listy(int size) {
+		this.array = new int[size];
+		this.size = size;
+	}
+	public void add(int x) {
+		this.array[this.lastIndex++] = x; 
+	}
+	public int elementAt(int index) {
+		if((index >= this.size) || (index < 0)) {
+			return -1;
+		}
+		return this.array[index];
+	}
+}
 public class SortingAndSearching {
 	//10.1; assumption: both A and B are initially sorted
 	public static void sortedMergeHelper() {
@@ -86,6 +105,7 @@ public class SortingAndSearching {
 		}
 		return ar;
 	}
+	//10.3 Search in Rotated Array
 	public static int searchRotatedHelper() {
 		int[] ar = {6,7,8,1,2,3,4,5};
 		return(searchRotated(ar, 2));
@@ -125,9 +145,36 @@ public class SortingAndSearching {
 		}
 		return -1;
 	}
+	//10.4 Sorted Search, no Size
+	public static int sortedSearchNoSizeHelper() {
+		Listy listy = new Listy(20000);
+		for(int i = 1; i <= 20000; i++) {
+			listy.add(i);
+		}
+		return sortedSearchNoSize(listy, 17882);
+	}
+	public static int sortedSearchNoSize(Listy listy, int x) {
+		if(listy.elementAt(0) == -1) {
+			System.out.println("Error. Listy size is 0.");
+			return -1;
+		}
+		int exp = 1;
+		int bound = exp;
+		while(!(listy.elementAt(bound) == -1) ) {
+			bound = (int) Math.pow(2, exp);
+			exp++;
+		}
+		for(int i = 0; i < bound; i++) {
+			if(listy.elementAt(i) == x) {
+				return i;
+			}
+		}
+		return -1;
+	}
 	public static void main(String[] args) {
 	//	sortedMergeHelper();
 	//	groupAnagramsHelper();
-		System.out.println(searchRotatedHelper());
+	//	System.out.println(searchRotatedHelper());
+		System.out.println(sortedSearchNoSizeHelper());
 	}
 }
