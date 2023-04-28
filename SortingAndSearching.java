@@ -171,10 +171,43 @@ public class SortingAndSearching {
 		}
 		return -1;
 	}
+	//10.5 Sparse Search solution
+	public static int sparseSearchHelper() {
+		String[] strAr = {"at", "", "", "", "ball", "", "", "car", "", "", "dad", "", ""};
+		return sparseSearch(strAr, "at");
+	}
+	public static int sparseSearch(String[] strAr, String x) {
+		ArrayList<String> strArAux = new ArrayList<String>();
+		HashMap<String, Integer> emptysBeforeStr = new HashMap<String, Integer>();
+		int emptyStrings = 0;
+		for(int i = 0; i < strAr.length; i++) {
+			if(!strAr[i].equals("")) {
+				strArAux.add(strAr[i]);
+				emptysBeforeStr.put(strAr[i], emptyStrings);
+			} else {
+				emptyStrings++;
+			}
+		}
+		int low = 0;
+		int high = strArAux.size() - 1;
+		int mid;
+		while(low <= high) {
+			mid = (low + high) / 2;
+			if((strArAux.get(mid)).compareTo(x) < 0) {
+				low = mid + 1;
+			}else if((strArAux.get(mid)).compareTo(x) > 0) {
+				high = mid - 1;
+			}else {
+				return (mid + emptysBeforeStr.get(strArAux.get(mid)));
+			}
+		}
+		return -1;
+	}
 	public static void main(String[] args) {
 	//	sortedMergeHelper();
 	//	groupAnagramsHelper();
 	//	System.out.println(searchRotatedHelper());
-		System.out.println(sortedSearchNoSizeHelper());
+	//	System.out.println(sortedSearchNoSizeHelper());
+		System.out.println(sparseSearchHelper());		
 	}
 }
