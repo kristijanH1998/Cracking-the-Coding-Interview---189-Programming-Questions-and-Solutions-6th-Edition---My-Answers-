@@ -1,5 +1,6 @@
 package sortingAndSearching;
 import java.util.*;
+import java.io.*;
 
 //Listy data structure used for 10.4 Sorted Search, no Size problem
 class Listy{
@@ -203,11 +204,47 @@ public class SortingAndSearching {
 		}
 		return -1;
 	}
+	//10.8 Find Duplicates
+	public static void findDuplicatesHelper(){
+		int numberOfInts = 32000;
+		int numberOfDups = 4;
+		int[] ar = new int[numberOfInts + numberOfDups];
+		for(int i = 0; i < numberOfInts; i++) {
+			ar[i] = i;
+		}
+		//We will add 4 duplicates at the end of the array. These should be stored in the result and output.
+		ar[numberOfInts] = 4;
+		ar[numberOfInts + 1] = 113;
+		ar[numberOfInts + 2] = 11656;
+		ar[numberOfInts + 3] = 567;
+		for(int dup: findDuplicates(ar, numberOfInts, numberOfDups)) {
+			System.out.print(dup + " ");
+		};
+	}
+	public static ArrayList<Integer> findDuplicates(int[] ar, int numberOfInts, int numberOfDups){
+		ArrayList<Integer> dups = new ArrayList<Integer>();
+		//We have only 4 kilobytes of memory available, and a byte array of size 32000/8=4000 bytes should work.
+		byte[] bitvector = new byte [(int) numberOfInts / 8];
+		
+		for(int i = 0; i < (numberOfInts + numberOfDups); i++) {
+			int n = ar[i];
+			bitvector[n / 8] ^= (1 << (n % 8));
+		}
+		for(int i = 0; i < bitvector.length; i++) {
+			for(int j = 0; j < 8; j++) {
+				if((bitvector[i] & (1 << j)) == 0) {
+					dups.add(i * 8 + j);
+				}
+			}
+		}
+		return dups;
+	}
 	public static void main(String[] args) {
 	//	sortedMergeHelper();
 	//	groupAnagramsHelper();
 	//	System.out.println(searchRotatedHelper());
 	//	System.out.println(sortedSearchNoSizeHelper());
-		System.out.println(sparseSearchHelper());		
+	//	System.out.println(sparseSearchHelper());
+		findDuplicatesHelper();
 	}
 }
