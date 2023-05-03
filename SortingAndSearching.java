@@ -2,6 +2,21 @@ package sortingAndSearching;
 import java.util.*;
 import java.io.*;
 
+class Cell{
+	int row;
+	int col;
+	public Cell(int row, int col) {
+		this.row = row;
+		this.col = col;
+	}
+	public int getRow() {
+		return this.row;
+	}
+	public int getCol() {
+		return this.col;
+	}
+}
+
 //Listy data structure used for 10.4 Sorted Search, no Size problem
 class Listy{
 	int[] array = {};
@@ -239,12 +254,80 @@ public class SortingAndSearching {
 		}
 		return dups;
 	}
+	//10.9 Sorted Matrix Search
+	public static void sortedMatrixSearchHelper(int element) {
+		int[][] matrix = {{1,7,11,13,23,33,45},
+						  {2,8,12,16,24,60,100}};
+		Cell cell = sortedMatrixSearch(matrix, element);
+		if(cell != null) {
+			System.out.println("Number " + element + " is at row " + cell.getRow() + " and column "
+					+ cell.getCol() + ".");
+		}
+	}
+	public static Cell searchColumnUp(int row, int col, int[][] matrix, int element) {
+		while(row - 1 >= 0 && matrix[row-1][col] >= element) {
+			row--;
+			if(matrix[row][col] == element) {
+				Cell cell = new Cell(row, col);
+				return cell;
+			}
+		}
+		return null; //element not found above matrix[row][col]
+	}
+	public static Cell searchRowLeft(int row, int col, int[][] matrix, int element) {
+		while(col - 1 >= 0 && matrix[row][col-1] >= element) {
+			col--;
+			if(matrix[row][col] == element) {
+				Cell cell = new Cell(row, col);
+				return cell;
+			}
+		}
+		return null; //element not found to the left of matrix[row][col]
+	}
+	public static Cell sortedMatrixSearch(int[][] matrix, int element) {
+		int row = 0;
+		int col = 0;
+		boolean searchColumnsUpwards = true;
+		boolean searchRowsToLeft = true;
+		while(row < matrix.length && col < matrix[0].length && matrix[row][col] != element) {
+			if(searchColumnsUpwards) {
+				Cell cell = searchColumnUp(row,col,matrix,element); 
+				if(cell != null) {	
+					return cell;
+				}
+			}
+			if(searchRowsToLeft) {
+				Cell cell = searchRowLeft(row,col,matrix,element); 
+				if(cell != null) {	
+					return cell;
+				}
+			}
+			if(row+1 < matrix.length && col+1 < matrix[0].length) {
+				row++;
+				col++;
+			} else if (row+1 == matrix.length) {
+				searchRowsToLeft = false;
+				col++;
+			} else if (col+1 == matrix[0].length) {
+				searchColumnsUpwards = false;
+				row++;
+			} 
+		}
+		if(row < matrix.length && col < matrix[0].length && matrix[row][col] == element) {
+			Cell cell = new Cell(row, col);
+			return cell;
+		} else {
+			System.out.println("Error: the given number is not in the matrix.");
+			return null; //The given number was not found in the matrix.
+		}
+	}
 	public static void main(String[] args) {
 	//	sortedMergeHelper();
 	//	groupAnagramsHelper();
 	//	System.out.println(searchRotatedHelper());
 	//	System.out.println(sortedSearchNoSizeHelper());
 	//	System.out.println(sparseSearchHelper());
-		findDuplicatesHelper();
+	//	findDuplicatesHelper();
+		sortedMatrixSearchHelper(7);
 	}
 }
