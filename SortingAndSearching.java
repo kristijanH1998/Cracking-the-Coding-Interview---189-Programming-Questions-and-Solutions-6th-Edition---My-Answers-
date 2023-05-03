@@ -1,6 +1,7 @@
 package sortingAndSearching;
 import java.util.*;
 import java.io.*;
+import java.time.*;
 
 class Cell{
 	int row;
@@ -254,8 +255,26 @@ public class SortingAndSearching {
 		}
 		return dups;
 	}
-	//10.9 Sorted Matrix Search
+	//10.9 Sorted Matrix Search naive solution
+	public static void sortedMatrixSearchNaive(int element) {
+		Instant start = Instant.now();
+		int[][] matrix = {{1,7,11,13,23,33,45},
+				  {2,8,12,16,24,60,100}};
+		outerloop:
+		for(int i = 0; i < matrix.length; i++) {
+			for(int j = 0; j < matrix[0].length; j++) {
+				if(matrix[i][j] == element) {
+					System.out.println("Row: " + i + ", Col: " + j);
+					break outerloop;
+				}
+			}
+		}
+		Instant finish = Instant.now();
+		System.out.println(Duration.between(start,finish).toNanos());
+	}
+	//10.9 Sorted Matrix Search optimized solution
 	public static void sortedMatrixSearchHelper(int element) {
+		Instant start = Instant.now();
 		int[][] matrix = {{1,7,11,13,23,33,45},
 						  {2,8,12,16,24,60,100}};
 		Cell cell = sortedMatrixSearch(matrix, element);
@@ -263,6 +282,8 @@ public class SortingAndSearching {
 			System.out.println("Number " + element + " is at row " + cell.getRow() + " and column "
 					+ cell.getCol() + ".");
 		}
+		Instant finish = Instant.now();
+		System.out.println(Duration.between(start,finish).toNanos());
 	}
 	public static Cell searchColumnUp(int row, int col, int[][] matrix, int element) {
 		while(row - 1 >= 0 && matrix[row-1][col] >= element) {
@@ -328,6 +349,7 @@ public class SortingAndSearching {
 	//	System.out.println(sortedSearchNoSizeHelper());
 	//	System.out.println(sparseSearchHelper());
 	//	findDuplicatesHelper();
-		sortedMatrixSearchHelper(7);
+		sortedMatrixSearchHelper(100);
+		sortedMatrixSearchNaive(100);
 	}
 }
