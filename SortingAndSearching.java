@@ -3,6 +3,44 @@ import java.util.*;
 import java.io.*;
 import java.time.*;
 
+//Binary Search Tree node class for 10.10
+class BSTnode{
+	private int value;
+	private BSTnode leftChild;
+	private BSTnode rightChild;
+	ArrayList<BSTnode> children = new ArrayList<BSTnode>();
+	public BSTnode(int value) {
+		this.value = value;
+	}
+	public int getValue() {
+		return this.value;
+	}
+	public void setLeftChild(BSTnode node) {
+		this.leftChild = node;
+		this.children.add(node);
+	}
+	public void setRightChild(BSTnode node) {
+		this.rightChild = node;
+		this.children.add(node);
+	}
+	public int getNumOfChildren() {
+		return this.children.size();
+	}
+	public void addNode(BSTnode node) {
+		BSTnode root = this;
+		if(this.getValue() >= node.getValue() && this.leftChild == null) {
+			this.setLeftChild(node);
+		} else if (this.rightChild == null){
+			this.setRightChild(node);
+		} else if (node.getValue() <= this.getValue()){
+			root = this.leftChild;
+			root.addNode(node);
+		} else {
+			root = this.rightChild;
+			root.addNode(node);
+		}
+	}
+}
 class Cell{
 	int row;
 	int col;
@@ -17,7 +55,6 @@ class Cell{
 		return this.col;
 	}
 }
-
 //Listy data structure used for 10.4 Sorted Search, no Size problem
 class Listy{
 	int[] array = {};
@@ -342,6 +379,16 @@ public class SortingAndSearching {
 			return null; //The given number was not found in the matrix.
 		}
 	}
+	//10.10 Rank From Stream
+	public static void readFromStream() {
+		int[] stream = {5, 1, 4, 4, 5, 9, 7, 13, 3};
+		for(int i = 0; i < stream.length; i++) {
+			track(stream[i]);
+		}
+	}
+	public static void track(int num) {
+		
+	}
 	public static void main(String[] args) {
 	//	sortedMergeHelper();
 	//	groupAnagramsHelper();
@@ -349,7 +396,22 @@ public class SortingAndSearching {
 	//	System.out.println(sortedSearchNoSizeHelper());
 	//	System.out.println(sparseSearchHelper());
 	//	findDuplicatesHelper();
-		sortedMatrixSearchHelper(100);
-		sortedMatrixSearchNaive(100);
+	//	sortedMatrixSearchHelper(100);
+	//	sortedMatrixSearchNaive(100);
+		BSTnode root = new BSTnode(4);
+		BSTnode n1 = new BSTnode(2);
+		BSTnode n2 = new BSTnode(6);
+		BSTnode n3 = new BSTnode(1);
+		BSTnode n4 = new BSTnode(3);
+		BSTnode n5 = new BSTnode(5);
+		BSTnode n6 = new BSTnode(8);
+		BSTnode n7 = new BSTnode(9);
+		root.addNode(n1);
+		root.addNode(n2);
+		root.addNode(n3);
+		root.addNode(n4);
+		root.addNode(n5);
+		root.addNode(n6);
+		root.addNode(n7);
 	}
 }
