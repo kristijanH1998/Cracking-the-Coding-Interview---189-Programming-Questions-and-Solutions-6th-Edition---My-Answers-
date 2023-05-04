@@ -6,9 +6,10 @@ import java.time.*;
 //Binary Search Tree node class for 10.10
 class BSTnode{
 	private int value;
-	private BSTnode leftChild;
-	private BSTnode rightChild;
-	ArrayList<BSTnode> children = new ArrayList<BSTnode>();
+	private BSTnode leftChild = null;
+	private BSTnode rightChild = null;
+	private BSTnode parent = null;
+	ArrayList<BSTnode> smallerChildren = new ArrayList<BSTnode>();
 	public BSTnode(int value) {
 		this.value = value;
 	}
@@ -17,11 +18,31 @@ class BSTnode{
 	}
 	public void setLeftChild(BSTnode node) {
 		this.leftChild = node;
-		this.children.add(node);
+		this.smallerChildren.add(node);
+		BSTnode current = this;
+		while(current.getParent() != null && (current.getParent().getValue() >= node.getValue())) {
+			current.getParent().smallerChildren.add(node);
+			current = current.getParent();
+		}
+		node.setParent(this);
 	}
 	public void setRightChild(BSTnode node) {
 		this.rightChild = node;
-		this.children.add(node);
+		BSTnode current = this;
+		while(current.getParent() != null && (current.getParent().getValue() >= node.getValue())) {
+			current.getParent().smallerChildren.add(node);
+			current = current.getParent();
+		}
+		node.setParent(this);
+	}
+	public void setParent(BSTnode node) {
+		this.parent = node;
+	}
+	public BSTnode getParent() {
+		if(this.parent == null) {
+			return null;
+		}
+		return this.parent;
 	}
 	public BSTnode getLeftChild() {
 		if(this.leftChild == null) {
@@ -35,8 +56,8 @@ class BSTnode{
 		}
 		return this.rightChild;
 	}
-	public int getNumOfChildren() {
-		return this.children.size();
+	public int getNumOfSmallerChildren() {
+		return this.smallerChildren.size();
 	}
 	public void addNode(BSTnode node) {
 		BSTnode root = this;
@@ -392,8 +413,8 @@ public class SortingAndSearching {
 		}
 	}
 	//10.10 Rank From Stream
-	public static void readFromStream() {
-		int[] stream = {4,2,6,1,3,5,8,9};
+	public static void rankFromStream() {
+		int[] stream = {5,1,4,4,5,9,7,13,3};
 		BSTnode root = new BSTnode(stream[0]);
 		for(int i = 1; i < stream.length; i++) {
 			track(stream[i], root);
@@ -407,11 +428,31 @@ public class SortingAndSearching {
 		root.addNode(child);
 	}
 	public static int getRankOfNumber(int num, BSTnode root) {
-		if(root.getLeftChild() == null) {
-			return 0;
-		}
 		if(root.getValue() == num) {
-			return (root.getLeftChild()).getNumOfChildren() + 1;
+			int smallerNums = root.getNumOfSmallerChildren();
+			if(root.getParent() != null && root.getParent().getValue() > root.getValue()) {
+				BSTnode current = root;
+				while(current.getParent() != null) {
+					current = current.getParent();
+					if(current.getValue() < root.getValue()) {
+						smallerNums++;
+						smallerNums += current.getNumOfSmallerChildren();
+					}
+				}
+				return smallerNums;
+			} else if (root.getParent() != null && root.getParent().getValue() <= root.getValue()){
+				BSTnode current = root;
+				while(current.getParent() != null) {
+					current = current.getParent();
+					if(current.getValue() < root.getValue()) {
+						smallerNums++;
+						smallerNums += current.getNumOfSmallerChildren();
+					}
+				}
+				return smallerNums;
+			} else {
+				return smallerNums;
+			}
 		} else if(num < root.getValue()) {
 			return getRankOfNumber(num, root.getLeftChild());
 		} else {
@@ -427,6 +468,6 @@ public class SortingAndSearching {
 	//	findDuplicatesHelper();
 	//	sortedMatrixSearchHelper(100);
 	//	sortedMatrixSearchNaive(100);
-		readFromStream();
+		rankFromStream();
 	}
 }
