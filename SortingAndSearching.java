@@ -23,6 +23,18 @@ class BSTnode{
 		this.rightChild = node;
 		this.children.add(node);
 	}
+	public BSTnode getLeftChild() {
+		if(this.leftChild == null) {
+			return null;
+		}
+		return this.leftChild;
+	}
+	public BSTnode getRightChild() {
+		if(this.rightChild == null) {
+			return null;
+		}
+		return this.rightChild;
+	}
 	public int getNumOfChildren() {
 		return this.children.size();
 	}
@@ -30,7 +42,7 @@ class BSTnode{
 		BSTnode root = this;
 		if(this.getValue() >= node.getValue() && this.leftChild == null) {
 			this.setLeftChild(node);
-		} else if (this.rightChild == null){
+		} else if (this.getValue() < node.getValue() && this.rightChild == null){
 			this.setRightChild(node);
 		} else if (node.getValue() <= this.getValue()){
 			root = this.leftChild;
@@ -381,13 +393,30 @@ public class SortingAndSearching {
 	}
 	//10.10 Rank From Stream
 	public static void readFromStream() {
-		int[] stream = {5, 1, 4, 4, 5, 9, 7, 13, 3};
+		int[] stream = {4,2,6,1,3,5,8,9};
+		BSTnode root = new BSTnode(stream[0]);
+		for(int i = 1; i < stream.length; i++) {
+			track(stream[i], root);
+		}
 		for(int i = 0; i < stream.length; i++) {
-			track(stream[i]);
+			System.out.println("Rank of number " + stream[i] + " is " + getRankOfNumber(stream[i], root));
 		}
 	}
-	public static void track(int num) {
-		
+	public static void track(int num, BSTnode root) {
+		BSTnode child = new BSTnode(num);
+		root.addNode(child);
+	}
+	public static int getRankOfNumber(int num, BSTnode root) {
+		if(root.getLeftChild() == null) {
+			return 0;
+		}
+		if(root.getValue() == num) {
+			return (root.getLeftChild()).getNumOfChildren() + 1;
+		} else if(num < root.getValue()) {
+			return getRankOfNumber(num, root.getLeftChild());
+		} else {
+			return getRankOfNumber(num, root.getRightChild());
+		}
 	}
 	public static void main(String[] args) {
 	//	sortedMergeHelper();
@@ -398,20 +427,6 @@ public class SortingAndSearching {
 	//	findDuplicatesHelper();
 	//	sortedMatrixSearchHelper(100);
 	//	sortedMatrixSearchNaive(100);
-		BSTnode root = new BSTnode(4);
-		BSTnode n1 = new BSTnode(2);
-		BSTnode n2 = new BSTnode(6);
-		BSTnode n3 = new BSTnode(1);
-		BSTnode n4 = new BSTnode(3);
-		BSTnode n5 = new BSTnode(5);
-		BSTnode n6 = new BSTnode(8);
-		BSTnode n7 = new BSTnode(9);
-		root.addNode(n1);
-		root.addNode(n2);
-		root.addNode(n3);
-		root.addNode(n4);
-		root.addNode(n5);
-		root.addNode(n6);
-		root.addNode(n7);
+		readFromStream();
 	}
 }
