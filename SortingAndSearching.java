@@ -463,6 +463,46 @@ public class SortingAndSearching {
 			return getRankOfNumber(num, root.getRightChild());
 		}
 	}
+	//10.11 Peaks and Valleys
+	public static void peaksAndValleysHelper() {
+		int[] ar = {1,2,3,4,5,6};
+		int sumOfElms = 0;
+		for(int i = 0; i < ar.length; i++) {
+			sumOfElms += ar[i];
+		}
+		double average = (double) sumOfElms / ar.length;
+		Stack<Integer> peaks = new Stack<Integer>();
+		Stack<Integer> valleys = new Stack<Integer>();
+		for(int i = 0; i < ar.length; i++) {
+			if(ar[i] < average) {
+				valleys.push(ar[i]);
+			} else {
+				peaks.push(ar[i]);
+			}
+		}
+		int[] newAr = peaksAndValleys(ar.length, peaks, valleys);
+		for(int i = 0; i < newAr.length; i++) {
+			System.out.print(newAr[i] + " ");
+		}
+	}
+	public static int[] peaksAndValleys(int arLength, Stack<Integer> peaks, Stack<Integer> valleys) {
+		int[] newAr = new int[arLength];
+		boolean startWithPeaks = false;
+		if(peaks.size() > valleys.size()) {
+			startWithPeaks = true;
+		}
+		int i = 0;
+		while(!(peaks.isEmpty() && valleys.isEmpty())) {
+			if(startWithPeaks) {
+				newAr[i++] = peaks.pop();
+				startWithPeaks = false;
+			} else {
+				newAr[i++] = valleys.pop();
+				startWithPeaks = true;
+			}
+		}
+		return newAr;
+	}
 	public static void main(String[] args) {
 	//	sortedMergeHelper();
 	//	groupAnagramsHelper();
@@ -472,6 +512,7 @@ public class SortingAndSearching {
 	//	findDuplicatesHelper();
 	//	sortedMatrixSearchHelper(100);
 	//	sortedMatrixSearchNaive(100);
-		rankFromStream();
+	//	rankFromStream();
+		peaksAndValleysHelper();
 	}
 }
