@@ -20,8 +20,10 @@ class BSTnode{
 		this.leftChild = node;
 		this.smallerChildren.add(node);
 		BSTnode current = this;
-		while(current.getParent() != null && (current.getParent().getValue() >= node.getValue())) {
-			current.getParent().smallerChildren.add(node);
+		while(current.getParent() != null) {
+			if(current.getParent().getValue() >= node.getValue()) {
+				current.getParent().smallerChildren.add(node);
+			}
 			current = current.getParent();
 		}
 		node.setParent(this);
@@ -29,8 +31,10 @@ class BSTnode{
 	public void setRightChild(BSTnode node) {
 		this.rightChild = node;
 		BSTnode current = this;
-		while(current.getParent() != null && (current.getParent().getValue() >= node.getValue())) {
-			current.getParent().smallerChildren.add(node);
+		while(current.getParent() != null) {
+			if(current.getParent().getValue() >= node.getValue()) {
+				current.getParent().smallerChildren.add(node);
+			}
 			current = current.getParent();
 		}
 		node.setParent(this);
