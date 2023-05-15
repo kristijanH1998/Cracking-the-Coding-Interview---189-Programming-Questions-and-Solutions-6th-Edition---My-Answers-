@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+//12.11 2D Alloc
 int** my2DAlloc (int i, int j){
     int** matrix = (malloc (sizeof(int*) * i));
     for(int a = 0; a < j; a++){
