@@ -31,6 +31,7 @@ public class Mavenproject1 {
             return this.continent;
         }
     }
+    //13.7 Lambda Expressions
     public static int getPopulation(List<Country> countries, String continent){
         int size = countries.size();
         int contPop = 0;
@@ -41,6 +42,7 @@ public class Mavenproject1 {
         }
         return contPop;
     }
+    //13.8 Lambda Random
     public static List<Integer> getRandomSubset (List<Integer> list){
         var rand = new Random();
         int randInts = rand.nextInt(list.size());
